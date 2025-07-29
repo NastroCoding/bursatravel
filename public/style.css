@@ -186,8 +186,8 @@ header::before{
   .header__content h1{
     margin-bottom: 2rem;
     font-size: 4.5rem;
-    font-weight: 600;
-    color: var(--text-dark);
+    font-weight: 400;
+    /* color: var(--text-dark); */
     line-height: 5.5rem;
     text-align: center;
   }
@@ -697,4 +697,15 @@ padding-block: 8rem;
   .destination__grid {
     gap: 2rem;
   }
+}
+
+@font-face {
+  font-family: grad;
+  src: url('grad.ttf');
+}
+
+.grad {
+  font-family: grad;
+  color: #702c94;
+  text-shadow:0px 0px 20px #fff,0px 0px 20px #614ad3;
 }

@@ -1,128 +1,221 @@
 @extends('layouts.main')
 @section('content')
-    <section id="aktifitas" class="flex justify-center items-center">
-        <div class="container mx-auto">
-            <div class="w-11/12 mx-auto rounded">
-                @php
-                    $images = json_decode($activities->image, true);
-                @endphp
-                <div class="mt-auto">
-                    <div class="flex justify-between text-sm mb-3 text-black">
-                        <p>Ditulis Oleh: <b>{{ $activities->trademark ?? 'Admin' }}</b></p>
+    <!-- Activity Detail Section -->
+    <section class="py-16 bg-white">
+        <div class="max-w-4xl mx-auto px-4">
+            @php
+                $images = json_decode($activities->image, true);
+            @endphp
+
+            <!-- Article Header -->
+            <div class="mb-8">
+                <!-- Meta Information -->
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between text-sm text-gray-500 mb-6">
+                    <div class="flex items-center mb-2 sm:mb-0">
+                        <i class="fas fa-user-circle text-blue-600 mr-2"></i>
+                        <span>Ditulis oleh: <strong class="text-gray-700">{{ $activities->trademark ?? 'Admin' }}</strong></span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-calendar text-blue-600 mr-2"></i>
                         @php
                             \Carbon\Carbon::setLocale('id');
                         @endphp
-                        <p>{{ \Carbon\Carbon::parse($activities->date)->translatedFormat('l, d F Y') }}</p>
+                        <span>{{ \Carbon\Carbon::parse($activities->date)->translatedFormat('d F Y') }}</span>
                     </div>
                 </div>
 
-                <div class="w-full text-white mt-5 md:mt-0 mx-auto">
-                    <div class="bg-gray-700 p-5 rounded mb-2">
-                        <h5 class="mb-2 text-2xl font-bold text-white">{{ $activities->title }}</h5>
-                        <p class="mb-3 text-white">{{ $activities->description }}</p>
-                    </div>
+                <!-- Title and Description -->
+                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-8 border-l-4 border-blue-600">
+                    <h1 class="text-3xl md:text-4xl font-light text-gray-800 mb-4 leading-tight">
+                        {{ $activities->title }}
+                    </h1>
+                    <p class="text-lg text-gray-600 leading-relaxed">
+                        {{ $activities->description }}
+                    </p>
                 </div>
+            </div>
 
-                @if ($images)
+            <!-- Activity Images -->
+            @if ($images)
+                <div class="mb-12">
                     @if (count($images) === 1)
-                        <div class="flex justify-center mb-5">
+                        <!-- Single Image -->
+                        <div class="text-center">
                             @foreach ($images as $image)
                                 @if ($image)
-                                    <img class="h-auto w-full max-w-sm mx-auto rounded-lg"
-                                        src="{{ asset('storage/' . $image) }}" alt="Activity Image">
+                                    <img class="w-full max-w-2xl mx-auto rounded-lg shadow-sm border border-gray-100"
+                                         src="{{ asset('storage/' . $image) }}" 
+                                         alt="{{ $activities->title }}">
                                 @else
-                                    <img class="h-auto w-full max-w-md mx-auto rounded-lg"
-                                        src="https://via.placeholder.com/600x400?text=No+Image+Available"
-                                        alt="No Image Available">
+                                    <div class="w-full max-w-2xl mx-auto h-64 bg-gray-100 rounded-lg flex items-center justify-center">
+                                        <span class="text-gray-400">No Image Available</span>
+                                    </div>
                                 @endif
                             @endforeach
                         </div>
                     @else
-                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-5 justify-center">
+                        <!-- Multiple Images Grid -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                             @foreach ($images as $image)
                                 @if ($image)
-                                    <img class="h-auto w-full mx-auto rounded-lg" src="{{ asset('storage/' . $image) }}"
-                                        alt="Activity Image">
+                                    <img class="w-full h-64 object-cover rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-300"
+                                         src="{{ asset('storage/' . $image) }}" 
+                                         alt="{{ $activities->title }}">
                                 @else
-                                    <img class="h-auto w-full mx-auto rounded-lg"
-                                        src="https://via.placeholder.com/600x400?text=No+Image+Available"
-                                        alt="No Image Available">
+                                    <div class="w-full h-64 bg-gray-100 rounded-lg flex items-center justify-center">
+                                        <span class="text-gray-400 text-sm">No Image</span>
+                                    </div>
                                 @endif
                             @endforeach
                         </div>
                     @endif
-                @endif
+                </div>
+            @endif
 
-                <div class="w-full mt-5">
-                    <div class="bg-gray-200 p-4 rounded-lg mb-4">
-                        <h6 class="text-xl font-semibold text-gray-800">{{ $activities->topic_title }}</h6>
-                        <p class="text-gray-700 mb-2"><small>{{ $activities->topic_subtitle }}</small></p>
-                        <div class="text-gray-700" style="min-height: 150px;">
-                            {!! $activities->topic_description !!}
-                        </div>
+            <!-- Activity Content -->
+            <div class="mb-12">
+                <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-8">
+                    @if($activities->topic_title)
+                        <h2 class="text-2xl font-medium text-gray-800 mb-3">
+                            {{ $activities->topic_title }}
+                        </h2>
+                    @endif
+                    
+                    @if($activities->topic_subtitle)
+                        <p class="text-gray-500 text-sm mb-6 italic">
+                            {{ $activities->topic_subtitle }}
+                        </p>
+                    @endif
+                    
+                    <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed">
+                        {!! $activities->topic_description !!}
                     </div>
                 </div>
             </div>
 
-        </div>
-    </section>
-
-    <section id="other">
-        <div class="w-10/12 mx-auto mt-10">
-            <h1 class="mb-4 text-xl font-extrabold tracking-tight leading-none md:text-2xl lg:text-3xl my-5">
-                Aktifitas lainnya
-            </h1>
-            <div class="flex">
-                <div class="md:grid gap-4 mb-10 w-2/3">
-                    @foreach ($all_activities->sortByDesc('date') as $activity)
-                        @if ($activity->id !== $activities->id)
-                            <!-- Exclude the current activity -->
-                            @php
-                                $images = json_decode($activity->image, true);
-                            @endphp
-                            <div class="bg-gray-200 shadow-lg rounded-lg mb-5 overflow-hidden">
-                                <div class="relative flex flex-col md:flex-row">
-                                    <div class="w-full md:w-1/2 h-56 md:h-auto">
-                                        @if (is_array($images) && !empty($images))
-                                            <img src="{{ asset('storage/' . $images[0]) }}"
-                                                class="object-cover w-full h-full" alt="Activity Image">
-                                        @else
-                                            <img src="https://via.placeholder.com/600x400?text=No+Image+Available"
-                                                class="object-cover w-full h-full" alt="No Image Available">
-                                        @endif
-                                    </div>
-                                    <div class="w-full md:w-1/2 p-5 bg-gray-200 text-white flex flex-col justify-between">
-                                        <div>
-                                            <h5 class="mb-2 text-2xl font-bold text-black">{{ $activity->title }}</h5>
-                                            <p class="mb-3 text-black">{{ $activity->description }}</p>
-                                        </div>
-                                        <div class="mt-auto">
-                                            <div class="flex justify-between text-xs mb-3 text-black">
-                                                <p>Ditulis Oleh: {{ $activity->trademark }}</p>
-                                                @php
-                                                    \Carbon\Carbon::setLocale('id');
-                                                @endphp
-                                                <p>{{ \Carbon\Carbon::parse($activities->date)->translatedFormat('l, d F Y') }}
-                                                </p>
-                                            </div>
-                                            <a href="/activity/{{ $activity->slug }}"
-                                                class="inline-flex items-center px-3 py-2 text-sm font-medium bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
-                                                Baca selengkapnya
-                                                <svg class="w-3.5 h-3.5 ms-2" aria-hidden="true"
-                                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                                                    <path stroke="currentColor" stroke-linecap="round"
-                                                        stroke-linejoin="round" stroke-width="2"
-                                                        d="M1 5h12m0 0L9 1m4 4L9 9" />
-                                                </svg>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
-                    @endforeach
-                </div>
+            <!-- Navigation/Actions -->
+            <div class="flex justify-center mb-12">
+                <a href="/" class="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Kembali ke Beranda
+                </a>
             </div>
         </div>
     </section>
+
+    <!-- Related Activities Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-6xl mx-auto px-4">
+            <!-- Section Header -->
+            <div class="mb-12">
+                <h2 class="text-3xl font-light text-gray-800 mb-4">Aktivitas Lainnya</h2>
+                <div class="w-16 h-0.5 bg-blue-600"></div>
+            </div>
+
+            <!-- Related Activities Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                @foreach ($all_activities->sortByDesc('date')->take(4) as $activity)
+                    @if ($activity->id !== $activities->id)
+                        @php
+                            $activityImages = json_decode($activity->image, true);
+                        @endphp
+                        <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300">
+                            <div class="md:flex">
+                                <!-- Image -->
+                                <div class="md:w-1/2">
+                                    @if (is_array($activityImages) && !empty($activityImages))
+                                        <img src="{{ asset('storage/' . $activityImages[0]) }}"
+                                             class="w-full h-48 md:h-full object-cover" 
+                                             alt="{{ $activity->title }}">
+                                    @else
+                                        <div class="w-full h-48 md:h-full bg-gray-100 flex items-center justify-center">
+                                            <span class="text-gray-400 text-sm">No Image</span>
+                                        </div>
+                                    @endif
+                                </div>
+                                
+                                <!-- Content -->
+                                <div class="md:w-1/2 p-6 flex flex-col justify-between">
+                                    <div>
+                                        <h3 class="text-xl font-medium text-gray-800 mb-3 line-clamp-2">
+                                            {{ $activity->title }}
+                                        </h3>
+                                        <p class="text-gray-600 text-sm mb-4 line-clamp-3">
+                                            {{ $activity->description }}
+                                        </p>
+                                    </div>
+                                    
+                                    <div class="flex items-center justify-between">
+                                        <div class="text-xs text-gray-500">
+                                            <p class="mb-1">{{ $activity->trademark }}</p>
+                                            @php
+                                                \Carbon\Carbon::setLocale('id');
+                                            @endphp
+                                            <p>{{ \Carbon\Carbon::parse($activity->date)->translatedFormat('d M Y') }}</p>
+                                        </div>
+                                        <a href="/activity/{{ $activity->slug }}"
+                                           class="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors">
+                                            Baca
+                                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                @endforeach
+            </div>
+
+            <!-- View All Activities Button -->
+            <div class="text-center mt-12">
+                <a href="/#aktifitas" class="inline-flex items-center px-6 py-3 bg-white text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors duration-300">
+                    Lihat Semua Aktivitas
+                    <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Custom Styles for Text Truncation -->
+    <style>
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+            color: #374151;
+            font-weight: 500;
+        }
+
+        .prose p {
+            margin-bottom: 1rem;
+        }
+
+        .prose ul, .prose ol {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .prose blockquote {
+            border-left: 4px solid #3b82f6;
+            padding-left: 1rem;
+            margin: 1.5rem 0;
+            font-style: italic;
+            background-color: #f8fafc;
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+    </style>
 @endsection

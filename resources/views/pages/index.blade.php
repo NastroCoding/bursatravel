@@ -5,7 +5,7 @@
       <div class="header__container">
         <div class="header__content">
           <p>Umroh Mudah, Nyaman Ibadah</p>
-          <h1>BURSA Umroh Haji <span class="text-red-500">Indo</span><span class="text-white">nesia</span></h1>
+          <h1><span class="grad">BURSA &nbsp;</span> Umroh Haji <span class="text-red-500">Indo</span><span class="text-white">nesia</span></h1>
           <div class="header__btns">
             <button class="btn">Pesan Kursi Sekarang!</button>
             <a href="#">

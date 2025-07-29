@@ -1,141 +1,132 @@
 @extends('layouts.main')
 @section('content')
-    <section id="visimisi">
-        <div class="bg-gray-700 border border-gray-200 dark:border-gray-700 mb-10 w-11/12 rounded-xl mx-auto">
-            <div class="relative h-32 flex items-center justify-center">
-                <div class="absolute inset-0 bg-fixed bg-center bg-no-repeat bg-cover filter blur z-1"
-                    style="background-image: url('{{ URL::asset('dist/assets/img/mecca-background2.jpg') }}');">
-                </div>
-                <h1
-                    class="mb-4 text-3xl font-extrabold tracking-tight leading-none text-center text-white md:text-3xl lg:text-4xl z-10">
-                    Visi & Misi Kelimatu Travel
-                </h1>
+    <!-- Vision & Mission Section -->
+    <section id="visimisi" class="py-16 bg-white">
+        <div class="max-w-6xl mx-auto px-4">
+            <!-- Header -->
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-medium text-gray-800 mb-4">Visi & Misi</h1>
+                <div class="w-16 h-0.5 bg-blue-600 mx-auto"></div>
             </div>
-        </div>
 
-        <div class="about-wrapper mx-auto">
-
-            <div class="">
-                <div class="text-sejarah shadow-xl mx-1 bg-gray-700 p-8 rounded-lg mb-2 ">
-                    <h1 class="text-3xl text-white font-bold text-center my-2"> Visi </h1>
-                    <hr class="mb-2 w-1/4 mx-auto">
-                    <p class="text-lg text-white"> {{ $configs->visi }}.</p>
+            <!-- Vision & Mission Cards -->
+            <div class="grid md:grid-cols-2 gap-8 mb-16">
+                <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-100">
+                    <h2 class="text-2xl font-medium text-gray-800 mb-4 text-center">Visi</h2>
+                    <p class="text-gray-600 leading-relaxed">{{ $configs->visi }}</p>
                 </div>
-                <div class="text-sejarah shadow-xl mx-1 bg-gray-700 p-8 rounded-lg mt-5 md:mt-0">
-                    <h1 class="text-3xl text-white font-bold text-center my-2"> Misi </h1>
-                    <hr class="mb-2 w-1/4 mx-auto">
-                    <p class="text-lg text-white mb-2">
-                        {!! nl2br(e($configs->misi)) !!}
-                    </p>
+                <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-100">
+                    <h2 class="text-2xl font-medium text-gray-800 mb-4 text-center">Misi</h2>
+                    <p class="text-gray-600 leading-relaxed">{!! nl2br(e($configs->misi)) !!}</p>
                 </div>
             </div>
 
-            <div class="p-4 rounded-lg md:p-8 bg-gradient-to-b from-gray-700 to-[#671282] mt-5" id="stats"
-                role="tabpanel" aria-labelledby="stats-tab">
-                <h1 class="text-3xl text-white font-bold text-center my-2"> Nilai Nilai Kelimatu </h1>
-                <dl
-                    class="sm:grid max-w-screen-xl grid-cols-2 gap-8 p-4 mx-auto text-gray-900 sm:grid-cols-3 xl:grid-cols-5 dark:text-white sm:p-8">
-                    <div class="flex flex-col items-center justify-center mb-2">
-                        <dt class="sm:mb-2 text-3xl text-white font-extrabold"><i class="fa-solid fa-user-tie"></i></dt>
-                        <dd class="text-white font-extrabold">Profesional</dd>
-                    </div>
-                    <div class="flex flex-col items-center justify-center mb-2">
-                        <dt class="sm:mb-2 text-3xl text-white font-extrabold"><i class="fa-solid fa-gear"></i></dt>
-                        <dd class="text-white font-extrabold">Integritas</dd>
-                    </div>
-                    <div class="flex flex-col items-center justify-center mb-2">
-                        <dt class="sm:mb-2 text-3xl text-white font-extrabold"><i class="fa-solid fa-handshake"></i></dt>
-                        <dd class="text-white font-extrabold">Jujur</dd>
-                    </div>
-                    <div class="flex flex-col items-center justify-center mb-2">
-                        <dt class="sm:mb-2 text-3xl text-white font-extrabold"><i class="fa-solid fa-scale-balanced"></i></dt>
-                        <dd class="text-white font-extrabold">Adil Peduli</dd>
-                    </div>
-                    <div class="flex flex-col items-center justify-center mb-2">
-                        <dt class="sm:mb-2 text-3xl text-white font-extrabold"><i class="fa-solid fa-lock"></i></dt>
-                        <dd class="text-white font-extrabold">Komitmen</dd>
-                    </div>
-                </dl>
-            </div>
-    </section>
-
-    <section id="sejarah">
-        <div class="bg-gray-700 border border-gray-200 dark:border-gray-700 my-10 w-11/12 rounded-xl mx-auto">
-            <div class="relative h-32 flex items-center justify-center">
-                <div class="absolute inset-0 bg-fixed bg-center bg-no-repeat bg-cover filter blur z-1"
-                    style="background-image: url('{{ URL::asset('dist/assets/img/mecca-background3.jpg') }}');">
-                </div>
-                <h1
-                    class="mb-4 text-3xl font-extrabold tracking-tight leading-none text-center text-white md:text-3xl lg:text-4xl z-10">
-                    Sejarah Pendirian Kelimatu Travel & Tours
-                </h1>
-            </div>
-        </div>
-
-        <div class="about-wrapper mx-auto">
-            <div class="sejarah-wrap lg:flex my-5">
-                <div class="picture">
-                    <img src="{{ URL::asset('dist/assets/img/kelimatu_logo.png') }}" class="w-full mx-auto" width="75%"
-                        alt="">
-                </div>
-                <div class="text-sejarah shadow-xl bg-gray-700 border border-gray-200 dark:border-gray-700 p-8 rounded-lg ">
-                    <p class="text-lg text-white">{{ $configs->history }}</p>
-                </div>
-            </div>
-            <div
-                class="text-white shadow-xl text-logo text-lg text-sejarah bg-gradient-to-b from-gray-700 to-[#671282] border border-gray-200 dark:border-gray-700 p-8 rounded-lg">
-                <h1>Arti Logo :</h1>
-                <p class="py-1">- WARNA UNGU MAGENTA, memiliki nilai positif, berjiwa
-                    artistik, bijaksana, dan intuitif, dekat dan senang memikirkan
-                    masalah spiritual dalam kehidupan.</p>
-                <p class="py-1">- LAMBANG, huruf K (double) melambangkan kebersamaan dan
-                    persatuan.</p>
-                <p class="py-1">- Tulisan “KELIMATU”, adalah branding nama dari PT. Emaar
-                    Pesona Wisata (EPW). Kelimatu (Kalimat ; Bahasa Arab)
-                    memiliki arti kesatuan perasaan dan ungkapan dalam bentuk
-                    kata/tulisan. Dan atau Kelimatu bisa disingkat sebagai
-                    Keluarga Alumni SMPN 57.</p>
-                <p class="py-1">- Travel & Tours, adalah bentuk usaha perjalanan travel & tours
-                    berupa umroh, haji dan wisata halal lainnya.</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="tim">
-        <div class="bg-gray-700 border border-gray-200 dark:border-gray-700 my-10 w-11/12 rounded-xl mx-auto">
-            <div class="relative h-32 flex items-center justify-center">
-                <div class="absolute inset-0 bg-fixed bg-center bg-no-repeat bg-cover filter blur z-1"
-                    style="background-image: url('{{ URL::asset('dist/assets/img/person-background.jpg') }}');">
-                </div>
-                <h1 class="mb-4 text-3xl font-extrabold tracking-tight leading-none text-white text-center md:text-3xl lg:text-4xl z-10"
-                    style="text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5); -webkit-text-fill-color: white;">
-                    Tim
-                </h1>
-            </div>
-        </div>
-        <div class="about-wrapper mx-auto flex">
-            <div class="container mx-auto px-4">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-
-                    @foreach ($teams as $team)
-                        <div class="max-w-sm bg-gray-700 rounded shadow">
-                            <img class="rounded-t-lg" src="{{ Storage::url($team->image) }}" alt="" />
-                            <div class="p-5">
-                                <a href="#">
-                                    <h5 class="mb-2 text-xl font-bold tracking-tight text-white">
-                                        {{ $team->name }}
-                                    </h5>
-                                </a>
-                                <p class="mb-3 font-normal text-gray-100">{{ $team->description }}
-                                </p>
-                            </div>
+            <!-- Values Section -->
+            <div class="bg-gray-50 rounded-lg p-8">
+                <h2 class="text-3xl font-medium text-gray-800 text-center mb-8">Nilai-Nilai Kami</h2>
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-6">
+                    <div class="text-center">
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fa-solid fa-user-tie text-blue-600"></i>
                         </div>
-                    @endforeach
-
+                        <span class="text-sm font-medium text-gray-700">Profesional</span>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fa-solid fa-gear text-blue-600"></i>
+                        </div>
+                        <span class="text-sm font-medium text-gray-700">Integritas</span>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fa-solid fa-handshake text-blue-600"></i>
+                        </div>
+                        <span class="text-sm font-medium text-gray-700">Jujur</span>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fa-solid fa-scale-balanced text-blue-600"></i>
+                        </div>
+                        <span class="text-sm font-medium text-gray-700">Adil Peduli</span>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fa-solid fa-lock text-blue-600"></i>
+                        </div>
+                        <span class="text-sm font-medium text-gray-700">Komitmen</span>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- History Section -->
+    <section id="sejarah" class="py-16 bg-gray-50">
+        <div class="max-w-6xl mx-auto px-4">
+            <!-- Header -->
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-medium text-gray-800 mb-4">Sejarah Kami</h1>
+                <div class="w-16 h-0.5 bg-blue-600 mx-auto"></div>
+            </div>
+
+            <!-- History Content -->
+            <div class="grid lg:grid-cols-2 gap-12 items-center mb-12">
+                <div class="text-center">
+                    <img src="{{ URL::asset('dist/assets/img/kelimatu_logo.png') }}" 
+                         class="max-w-xs mx-auto" alt="Kelimatu Logo">
+                </div>
+                <div>
+                    <p class="text-gray-600 leading-relaxed text-lg">{{ $configs->history }}</p>
+                </div>
+            </div>
+
+            <!-- Logo Meaning -->
+            <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-100">
+                <h3 class="text-2xl font-medium text-gray-800 mb-6">Arti Logo</h3>
+                <div class="space-y-4 text-gray-600">
+                    <p><strong class="text-gray-800">Warna Ungu Magenta:</strong> Memiliki nilai positif, berjiwa artistik, bijaksana, dan intuitif, dekat dan senang memikirkan masalah spiritual dalam kehidupan.</p>
+                    <p><strong class="text-gray-800">Lambang:</strong> Huruf K (double) melambangkan kebersamaan dan persatuan.</p>
+                    <p><strong class="text-gray-800">Tulisan "KELIMATU":</strong> Adalah branding nama dari PT. Emaar Pesona Wisata (EPW). Kelimatu (Kalimat; Bahasa Arab) memiliki arti kesatuan perasaan dan ungkapan dalam bentuk kata/tulisan.</p>
+                    <p><strong class="text-gray-800">Travel & Tours:</strong> Adalah bentuk usaha perjalanan travel & tours berupa umroh, haji dan wisata halal lainnya.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section id="tim" class="py-16 bg-white">
+        <div class="max-w-6xl mx-auto px-4">
+            <!-- Header -->
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-medium text-gray-800 mb-4">Tim Kami</h1>
+                <div class="w-16 h-0.5 bg-blue-600 mx-auto"></div>
+            </div>
+
+            <!-- Team Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                @foreach ($teams as $team)
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300">
+                        <img class="w-full h-64 object-cover" src="{{ Storage::url($team->image) }}" alt="{{ $team->name }}">
+                        <div class="p-6">
+                            <h3 class="text-xl font-medium text-gray-800 mb-2">{{ $team->name }}</h3>
+                            <p class="text-gray-600 leading-relaxed">{{ $team->description }}</p>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal (simplified) -->
+    <div id="media-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg max-w-4xl max-h-full overflow-auto">
+            <div class="p-4">
+                <button id="close-modal" class="float-right text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+                <div id="modal-content" class="clear-both pt-4"></div>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const modal = document.getElementById('media-modal');
@@ -150,10 +141,10 @@
 
                     let content = '';
                     if (type === 'image') {
-                        content = `<img src="${media}" class="h-auto max-w-full rounded-lg" />`;
+                        content = `<img src="${media}" class="max-w-full h-auto rounded-lg" alt="">`;
                     } else {
                         content = `
-                            <video class="h-auto max-w-full rounded-lg" controls>
+                            <video class="max-w-full h-auto rounded-lg" controls>
                                 <source src="${media}" type="video/${media.split('.').pop()}">
                                 Your browser does not support the video tag.
                             </video>

@@ -1,54 +1,54 @@
 @extends('layouts.main')
 @section('content')
-    <section id="aktifitas">
-        <div class="bg-gray-700 border border-gray-200 dark:border-gray-700 mb-10 w-11/12 rounded-xl mx-auto">
-            <div class="relative h-28 flex items-center justify-center">
-                <div class="absolute inset-0 bg-fixed bg-center bg-no-repeat bg-cover filter blur z-1"
-                    style="background-image: url('{{ URL::asset('dist/assets/img/masjid-nabawi.jpg') }}');">
-                </div>
-                <h1
-                    class="mb-4 text-3xl font-extrabold tracking-tight leading-none text-white text-center md:text-3xl lg:text-4xl z-10">
-                    Aktifitas
-                </h1>
+    <!-- Activities Section -->
+    <section id="aktifitas" class="py-16 bg-white">
+        <div class="max-w-6xl mx-auto px-4">
+            <!-- Header -->
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-medium text-gray-800 mb-4">Aktivitas Kami</h1>
+                <div class="w-16 h-0.5 bg-blue-600 mx-auto"></div>
             </div>
-        </div>
-        <div class="flex justify-center">
-            <div class="md:grid gap-4 mb-10 w-5/6">
+
+            <!-- Activities Grid -->
+            <div class="space-y-8">
                 @foreach ($activities->sortByDesc('date') as $activity)
                     @php
                         $images = json_decode($activity->image, true);
                     @endphp
-                    <div class="bg-gray-200 shadow-lg rounded-lg mb-5 overflow-hidden">
-                        <div class="relative flex flex-col md:flex-row">
-                            <div class="w-full md:w-1/2 h-56 md:h-auto">
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300">
+                        <div class="md:flex">
+                            <!-- Image -->
+                            <div class="md:w-1/3">
                                 @if (is_array($images) && !empty($images))
                                     <img src="{{ asset('storage/' . $images[0]) }}"
-                                        class="object-cover w-full h-full lazyload" alt="Activity Image">
+                                        class="w-full h-64 md:h-full object-cover" alt="{{ $activity->title }}">
                                 @else
-                                    <img src="https://via.placeholder.com/600x400?text=No+Image+Available"
-                                        class="object-cover w-full h-full lazyload" alt="No Image Available">
+                                    <div class="w-full h-64 md:h-full bg-gray-100 flex items-center justify-center">
+                                        <span class="text-gray-400">No Image</span>
+                                    </div>
                                 @endif
                             </div>
-                            <div class="w-full md:w-1/2 p-5 bg-gray-200 text-white flex flex-col justify-between">
+                            
+                            <!-- Content -->
+                            <div class="md:w-2/3 p-6 flex flex-col justify-between">
                                 <div>
-                                    <h5 class="mb-2 text-2xl font-bold text-black">{{ $activity->title }}</h5>
-                                    <p class="mb-3 text-black">{{ $activity->description }}</p>
+                                    <h3 class="text-2xl font-medium text-gray-800 mb-3">{{ $activity->title }}</h3>
+                                    <p class="text-gray-600 leading-relaxed mb-4">{{ $activity->description }}</p>
                                 </div>
-                                <div class="mt-auto">
-                                    <div class="flex justify-between text-xs mb-3 text-black">
-                                        <p>Ditulis Oleh: {{ $activity->trademark }}</p>
+                                
+                                <div class="flex items-center justify-between">
+                                    <div class="text-sm text-gray-500">
+                                        <p class="mb-1">Oleh: {{ $activity->trademark }}</p>
                                         @php
                                             \Carbon\Carbon::setLocale('id');
                                         @endphp
-                                        <p>{{ \Carbon\Carbon::parse($activity->date)->translatedFormat('l, d F Y') }}</p>
+                                        <p>{{ \Carbon\Carbon::parse($activity->date)->translatedFormat('d F Y') }}</p>
                                     </div>
                                     <a href="/activity/{{ $activity->slug }}"
-                                        class="inline-flex items-center px-3 py-2 text-sm font-medium bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                                        class="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors">
                                         Baca selengkapnya
-                                        <svg class="w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                            fill="none" viewBox="0 0 14 10">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
+                                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                                         </svg>
                                     </a>
                                 </div>
@@ -58,139 +58,109 @@
                 @endforeach
             </div>
         </div>
-
     </section>
 
-    <section id="galeri">
-        <div class="bg-gray-700 border border-gray-200 dark:border-gray-700 mb-10 w-11/12 rounded-xl mx-auto">
-            <div class="relative h-28 flex items-center justify-center">
-                <div class="absolute inset-0 bg-fixed bg-center bg-no-repeat bg-cover filter blur z-1"
-                    style="background-image: url('{{ URL::asset('dist/assets/img/camera-background.jpg') }}');">
-                </div>
-                <h1
-                    class="mb-4 text-3xl font-extrabold tracking-tight leading-none text-white text-center md:text-3xl lg:text-4xl z-10">
-                    Galeri
-                </h1>
+    <!-- Gallery Section -->
+    <section id="galeri" class="py-16 bg-gray-50">
+        <div class="max-w-6xl mx-auto px-4">
+            <!-- Header -->
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-medium text-gray-800 mb-4">Galeri</h1>
+                <div class="w-16 h-0.5 bg-blue-600 mx-auto"></div>
             </div>
-    
-            <div class="w-3/4 mx-auto my-10">
-                <div id="gallery-container" class="grid md:grid-cols-3 gap-4">
-                    @foreach ($galleries->sortByDesc('created_at')->take(6) as $gallery)
-                        <div class="relative bg-gray-200 shadow-lg rounded-lg overflow-hidden">
-                            <a href="#" class="open-modal" data-media="{{ Storage::url($gallery->media) }}"
-                                data-type="{{ in_array(pathinfo($gallery->media, PATHINFO_EXTENSION), ['jpeg', 'png', 'jpg', 'gif', 'webp']) ? 'image' : 'video' }}"
-                                data-description="{{ $gallery->description }}">
-                                <div class="aspect-w-16">
-                                    @if (in_array(pathinfo($gallery->media, PATHINFO_EXTENSION), ['jpeg', 'png', 'jpg', 'gif', 'webp']))
-                                        <img src="{{ Storage::url($gallery->media) }}" class="aspect-content rounded-t-lg lazyload"
-                                            alt="">
-                                    @else
-                                        <video class="aspect-content rounded-t-lg" controls>
-                                            <source src="{{ Storage::url($gallery->media) }}"
+
+            <!-- Gallery Grid -->
+            <div id="gallery-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                @foreach ($galleries->sortByDesc('created_at')->take(6) as $gallery)
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300">
+                        <a href="#" class="open-modal block" 
+                           data-media="{{ Storage::url($gallery->media) }}"
+                           data-type="{{ in_array(pathinfo($gallery->media, PATHINFO_EXTENSION), ['jpeg', 'png', 'jpg', 'gif', 'webp']) ? 'image' : 'video' }}"
+                           data-description="{{ $gallery->description }}">
+                            <div class="aspect-w-16 aspect-h-9">
+                                @if (in_array(pathinfo($gallery->media, PATHINFO_EXTENSION), ['jpeg', 'png', 'jpg', 'gif', 'webp']))
+                                    <img src="{{ Storage::url($gallery->media) }}" 
+                                         class="w-full h-48 object-cover" alt="">
+                                @else
+                                    <video class="w-full h-48 object-cover">
+                                        <source src="{{ Storage::url($gallery->media) }}"
                                                 type="video/{{ pathinfo($gallery->media, PATHINFO_EXTENSION) }}">
-                                            Your browser does not support the video tag.
-                                        </video>
-                                    @endif
-                                </div>
-                            </a>
-                            @if (!empty($gallery->description))
-                                <div class="p-4">
-                                    <p class="text-sm text-gray-600">{{ $gallery->description }}</p>
-                                </div>
-                            @endif
-                        </div>
-                    @endforeach
-                </div>
-                <div class="text-center mt-4">
-                    <button id="load-more" class="bg-blue-500 text-white px-4 py-2 rounded">Lihat Foto Lainnya</button>
-                </div>
-            </div>
-    
-            <div id="media-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 hidden z-50">
-                <div class="relative bg-gray-200 p-4 rounded-lg max-w-3xl w-full max-h-screen overflow-auto">
-                    <button id="close-modal" class="absolute top-4 right-4 text-black">X</button>
-                    <div id="modal-content" class="flex flex-col items-center justify-center">
-                        <!-- Content will be inserted here via JavaScript -->
+                                    </video>
+                                @endif
+                            </div>
+                        </a>
+                        @if (!empty($gallery->description))
+                            <div class="p-4">
+                                <p class="text-sm text-gray-600">{{ $gallery->description }}</p>
+                            </div>
+                        @endif
                     </div>
-                </div>
+                @endforeach
             </div>
-    
-            <style>
-                #modal-content img,
-                #modal-content video {
-                    max-width: 100%;
-                    max-height: 80vh;
-                    object-fit: contain;
-                }
-    
-                #modal-content p {
-                    margin-top: 1rem;
-                    color: #4A5568;
-                }
-    
-                .aspect-w-16 {
-                    position: relative;
-                    width: 100%;
-                }
-    
-                .aspect-w-16::before {
-                    content: '';
-                    display: block;
-                    padding-top: 56.25%;
-                    /* 16:9 aspect ratio */
-                }
-    
-                .aspect-w-16>.aspect-content {
-                    position: absolute;
-                    top: 0;
-                    right: 0;
-                    bottom: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                    /* Use 'cover' to maintain aspect ratio and cover the area, 'contain' if you want to fit inside */
-                }
-            </style>
+
+            <!-- Load More Button -->
+            <div class="text-center">
+                <button id="load-more" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300">
+                    Lihat Foto Lainnya
+                </button>
+            </div>
         </div>
     </section>
-    
 
-    <section id="testimoni">
-        <div class="bg-gray-700 border border-gray-200 dark:border-gray-700 mb-10 w-11/12 rounded-xl mx-auto">
-            <div class="relative h-28 flex items-center justify-center">
-                <div class="absolute inset-0 bg-fixed bg-center bg-no-repeat bg-cover filter blur z-1"
-                    style="background-image: url('{{ URL::asset('dist/assets/img/kaabah-banner2.jpg') }}');">
-                </div>
-                <h1
-                    class="mb-4 text-3xl font-extrabold tracking-tight leading-none text-white text-center md:text-3xl lg:text-4xl z-10">
-                    Testimoni
-                </h1>
+    <!-- Testimonials Section -->
+    <section id="testimoni" class="py-16 bg-white">
+        <div class="max-w-6xl mx-auto px-4">
+            <!-- Header -->
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-medium text-gray-800 mb-4">Testimoni</h1>
+                <div class="w-16 h-0.5 bg-blue-600 mx-auto"></div>
             </div>
-        </div>
 
-        <div class="w-5/6 mx-auto mb-10">
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4">
+            <!-- Testimonials Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 @foreach ($testimonials->sortByDesc('created_at') as $testimonial)
-                    <div
-                        class="testimonial-item flex-shrink-0 w-full bg-gray-200 p-6 rounded-lg shadow-md flex flex-col items-center text-center relative min-h-[400px]">
-                        <img src="{{ $testimonial->image ? Storage::url($testimonial->image) : 'https://via.placeholder.com/100' }}"
-                            alt="Aqil"
-                            class="lazyload w-16 h-20 rounded-full overflow-hidden border-2 border-gray-200 mb-4 object-cover">
-                        <h3 class="font-semibold">{{ $testimonial->name }}</h3>
-                        <p class="text-gray-500">{{ $testimonial->caption }}</p>
-                        <div class="relative mt-2">
-                            <i class="fas fa-quote-left -left-10 top-0 text-2xl text-gray-500"></i>
-                            <p class="text-gray-700 m-4">
-                                {{ $testimonial->description }}
-                            </p>
-                            <i class="fas fa-quote-right -right-10 bottom-0 text-2xl text-gray-500"></i>
+                    <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-100 relative">
+                        <!-- Quote Icon -->
+                        <div class="absolute top-4 left-4 text-blue-100">
+                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+                            </svg>
                         </div>
+
+                        <!-- Profile -->
+                        <div class="flex items-center mb-6">
+                            <img src="{{ $testimonial->image ? Storage::url($testimonial->image) : 'https://via.placeholder.com/60' }}"
+                                 alt="{{ $testimonial->name }}"
+                                 class="w-12 h-12 rounded-full object-cover border-2 border-gray-100">
+                            <div class="ml-4">
+                                <h4 class="font-medium text-gray-800">{{ $testimonial->name }}</h4>
+                                <p class="text-sm text-gray-500">{{ $testimonial->caption }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Testimonial Content -->
+                        <p class="text-gray-600 leading-relaxed italic">
+                            "{{ $testimonial->description }}"
+                        </p>
                     </div>
                 @endforeach
             </div>
         </div>
     </section>
+
+    <!-- Modal -->
+    <div id="media-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-lg max-w-4xl max-h-full overflow-auto relative">
+            <button id="close-modal" class="absolute top-4 right-4 z-10 w-8 h-8 bg-white rounded-full flex items-center justify-center text-gray-600 hover:text-gray-800 shadow-lg">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+            <div id="modal-content" class="p-4">
+                <!-- Content will be inserted here -->
+            </div>
+        </div>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -198,7 +168,7 @@
             const modalContent = document.getElementById('modal-content');
             const closeModal = document.getElementById('close-modal');
 
-            // Event delegation for dynamically added items
+            // Modal functionality
             document.addEventListener('click', event => {
                 if (event.target.closest('.open-modal')) {
                     event.preventDefault();
@@ -209,18 +179,18 @@
 
                     let content = '';
                     if (type === 'image') {
-                        content = `<img src="${media}" class="h-auto max-w-full rounded-lg" />`;
+                        content = `<img src="${media}" class="max-w-full h-auto rounded-lg" alt="">`;
                     } else {
                         content = `
-                    <video class="h-auto max-w-full rounded-lg" controls>
-                        <source src="${media}" type="video/${media.split('.').pop()}">
-                        Your browser does not support the video tag.
-                    </video>
-                `;
+                            <video class="max-w-full h-auto rounded-lg" controls>
+                                <source src="${media}" type="video/${media.split('.').pop()}">
+                                Your browser does not support the video tag.
+                            </video>
+                        `;
                     }
 
                     if (description) {
-                        content += `<p class="text-sm text-gray-600">${description}</p>`;
+                        content += `<p class="mt-4 text-gray-600 text-center">${description}</p>`;
                     }
 
                     modalContent.innerHTML = content;
@@ -238,7 +208,8 @@
                 }
             });
 
-            let currentIndex = 6; // Initial number of images loaded
+            // Load more functionality
+            let currentIndex = 6;
             const loadMoreButton = document.getElementById('load-more');
 
             loadMoreButton.addEventListener('click', () => {
@@ -249,26 +220,23 @@
                         data.galleries.forEach(gallery => {
                             const mediaType = ['jpeg', 'png', 'jpg', 'gif', 'webp'].includes(
                                 gallery.extension) ? 'image' : 'video';
+                            
                             const mediaElement = mediaType === 'image' ?
-                                `<div class="aspect-w-16">
-                            <img class="aspect-content rounded-t-lg" src="${gallery.media}" alt="">
-                        </div>` :
-                                `<div class="aspect-w-16">
-                            <video class="aspect-content rounded-t-lg" controls>
-                                <source src="${gallery.media}" type="video/${gallery.extension}">
-                                Your browser does not support the video tag.
-                            </video>
-                        </div>`;
+                                `<img src="${gallery.media}" class="w-full h-48 object-cover" alt="">` :
+                                `<video class="w-full h-48 object-cover">
+                                    <source src="${gallery.media}" type="video/${gallery.extension}">
+                                </video>`;
 
                             const galleryItem = document.createElement('div');
-                            galleryItem.classList.add('relative', 'bg-gray-200', 'shadow-lg',
-                                'rounded-lg', 'overflow-hidden');
+                            galleryItem.classList.add('bg-white', 'rounded-lg', 'shadow-sm', 'border', 'border-gray-100', 'overflow-hidden', 'hover:shadow-md', 'transition-shadow', 'duration-300');
                             galleryItem.innerHTML = `
-                        <a href="#" class="open-modal" data-media="${gallery.media}" data-type="${mediaType}" data-description="${gallery.description}">
-                            ${mediaElement}
-                        </a>
-                        ${gallery.description ? `<div class="p-4"><p class="text-sm text-gray-600">${gallery.description}</p></div>` : ''}
-                    `;
+                                <a href="#" class="open-modal block" data-media="${gallery.media}" data-type="${mediaType}" data-description="${gallery.description}">
+                                    <div class="aspect-w-16 aspect-h-9">
+                                        ${mediaElement}
+                                    </div>
+                                </a>
+                                ${gallery.description ? `<div class="p-4"><p class="text-sm text-gray-600">${gallery.description}</p></div>` : ''}
+                            `;
                             galleryContainer.appendChild(galleryItem);
                         });
 
