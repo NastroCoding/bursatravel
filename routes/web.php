@@ -10,6 +10,8 @@ use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TestimonialController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\ServiceDetailController;
+use App\Http\Controllers\ActivityTopicController;
+use App\Http\Controllers\QuillImageController;
 use App\Models\Config;
 use Illuminate\Support\Facades\Route;
 use Mews\Captcha\Captcha;
@@ -39,7 +41,7 @@ Route::controller(RouteController::class)->group(function(){
     Route::middleware('auth')->group(function() {
         Route::get('/admin/dashboard', 'admin_inbox');
         Route::get('/admin/gallery', 'admin_gallery');
-        Route::get('/admin/testimony', 'admin_testimony');
+        Route::get('/admin/testimony', 'admin_testimony')->name('testimonials.index');
         Route::get('/admin/team', 'admin_team');
         Route::get('/admin/inbox', 'admin_inbox');
         Route::get('/admin/services', 'admin_services');
@@ -89,9 +91,9 @@ Route::middleware('auth')->group(function(){
             Route::post('/mail/delete', 'destroy');
         });
 
-        // Route::controller(ServiceDetailController::class)->group(function(){
-        //     Route::post('/service/detail/add/{id}', 'store');
-        // });
+        Route::controller(ServiceDetailController::class)->group(function(){
+            Route::post('/service/detail/add/{id}', 'store');
+        });
 
         Route::controller(ConfigController::class)->group(function(){
             Route::post('/config/update/{id}', 'update');
@@ -100,8 +102,16 @@ Route::middleware('auth')->group(function(){
             Route::get('/config/slideshow/delete/{id}', 'slide_destroy');
             Route::get('/config/item/delete/{id}', 'destroy');
         });
+        
+        Route::resource('activities.activity-topics', ActivityTopicController::class);
+
+        Route::controller(QuillImageController::class)->group(function(){
+            Route::post('/quill-image-upload', 'upload')->name('quill.image.upload');
+        });
     });
 });
+
+// Nested resource route
 
 Route::fallback(function () {
     $configs = Config::latest()->first();

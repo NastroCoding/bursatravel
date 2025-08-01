@@ -16,14 +16,13 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         DB::table('users')->insert([
-            'name' => 'Kelimatu Admin',
             'email' => 'kelimatuadmin@kelimatu.com',
             'password' => Hash::make('travel&tourkelimatu24')
         ]);
 
         DB::table('configs')->insert([
-            'address' => 'Ruko Jl. Persada Raya 70H, RT003 RW015 Menteng Dalam, Tebet, Jakarta, Indonesia 12870',
-            'whatsapp_num' => '087771408467',
+            'address' => 'Jl. Peningkatan Raya No. 28 Menteng Dalam, Tebet Jakarta Selatan',
+            'whatsapp_num' => '081933995573',
             'visi' => 'Menjadi penyelenggara umroh terdepan dengan fasilitas terbaik, mengutamakan nilai spiritual dan kepuasan layanan kepada Tamu Allah.',
             'misi' => '- Memberikan layanan terbaik, nyaman, kompetitif dan memuaskan bagi jamaah.
             - Melakukan edukasi pemahaman kepada masyarakat dalam memilih penyelenggara umroh haji yang baik dan benar.
@@ -34,8 +33,8 @@ class DatabaseSeeder extends Seeder
             'operational' => 'Senin-Jumat, 09.00 - 18.00
             Sabtu, 09.00 - 18.00
             Minggu, 09.00 - 12.00',
-            'gmail' => 'khighlevel@gmail.com',
-            'instagram' => 'kelimatutraveltour',
+            'gmail' => 'bursaumrohindonesia@gmail.com',
+            'instagram' => 'bursa.umroh',
             'title_info' => 'Umroh Adalah',
             'info' => "Umrah secara bahasa bisa diartikan berziarah. Sedangkan menurut istilah, umroh adalah menyengaja menuju Ka'bah untuk melaksanakan ibadah tertentu.
 

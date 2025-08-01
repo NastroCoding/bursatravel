@@ -29,12 +29,14 @@ class RouteController extends Controller
         $items = Item::all();
         $slideshows = Slideshow::all();
         $activities = Activity::all();
+        $galleries = Gallery::latest()->take(6)->get();
         return view('pages.index', [
             'page'  => 'Index',
             'testimonials' => $testimonials,
             'items' => $items,
             'slideshows' => $slideshows,
-            'activities' => $activities
+            'activities' => $activities,
+            'galleries' => $galleries
         ], compact('configs'));
     }
 

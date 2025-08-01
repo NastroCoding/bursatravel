@@ -72,24 +72,28 @@
                 </div>
             @endif
 
-            <!-- Activity Content -->
+            <!-- Activity Content: Semua Topic -->
             <div class="mb-12">
                 <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-8">
-                    @if($activities->topic_title)
-                        <h2 class="text-2xl font-medium text-gray-800 mb-3">
-                            {{ $activities->topic_title }}
-                        </h2>
+                    @if($activities->activityTopics && $activities->activityTopics->count())
+                        @foreach($activities->activityTopics as $topic)
+                            <div class="mb-8">
+                                <h2 class="text-2xl font-medium text-gray-800 mb-3">
+                                    {{ $topic->title }}
+                                </h2>
+                                @if($topic->subtitle)
+                                    <p class="text-gray-500 text-sm mb-4 italic">
+                                        {{ $topic->subtitle }}
+                                    </p>
+                                @endif
+                                <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed">
+                                    {!! $topic->description !!}
+                                </div>
+                            </div>
+                        @endforeach
+                    @else
+                        <p class="text-gray-500">Belum ada topik untuk aktivitas ini.</p>
                     @endif
-                    
-                    @if($activities->topic_subtitle)
-                        <p class="text-gray-500 text-sm mb-6 italic">
-                            {{ $activities->topic_subtitle }}
-                        </p>
-                    @endif
-                    
-                    <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed">
-                        {!! $activities->topic_description !!}
-                    </div>
                 </div>
             </div>
 

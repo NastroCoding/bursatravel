@@ -17,6 +17,8 @@ return new class extends Migration
             $table->text('image')->nullable();
             $table->string('caption')->nullable();
             $table->text('description');
+            $table->string('youtube_url')->nullable(); 
+            $table->text('video')->nullable(); // Tambah kolom untuk upload video manual
             $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });

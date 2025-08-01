@@ -1,871 +1,755 @@
 @extends('layouts.admin')
 @section('content')
-    @if ($errors->any())
+
+<!-- Alert Messages -->
+@if ($errors->any())
+    <div class="mb-6">
         @foreach ($errors->all() as $error)
-            <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 animate__animated animate__fadeInDown animate__faster"
-                role="alert">
-                <span class="font-medium">{{ $error }}</span>
+            <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-3 flex items-center">
+                <i class="fas fa-exclamation-circle mr-2"></i>
+                {{ $error }}
             </div>
         @endforeach
-    @endif
-    @if (session('success'))
-        <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 animate__animated animate__fadeInDown animate__faster"
-            role="alert">
-            <span class="font-medium">Sukses!</span> {{ session('success') }}
-        </div>
-    @endif
-    <h1 class="text-3xl">Layanan</h1>
-    <button data-modal-target="add-modal" data-modal-toggle="add-modal" type="button"
-        class="mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 transition mb-2 focus:outline-none">Tambah
-        Layanan</button>
-
-    <div class="flex flex-col sm:flex-row sm:justify-evenly sm:space-x-4 space-y-4 sm:space-y-0">
-        <div class="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-4">
-            <!-- Card 1 -->
-            @foreach ($services->sortByDesc('created_at') as $service)
-                <div
-                    class="bg-gradient-to-t from-gray-700 to-[#671282] border border-gray-200 rounded-lg shadow max-w-sm mx-auto sm:mx-0">
-                    <img class="rounded-t-lg w-full"
-                        src="{{ $service->image ? Storage::url($service->image) : URL::asset('dist/assets/img/kaabah-card.jpg') }}"
-                        alt="" />
-                    <div class="p-5">
-                        <h5 class="text-2xl font-bold tracking-tight text-white text-center">{{ $service->title }}</h5>
-                        <h5 class="mb-2 text-sm tracking-tight text-white text-center">{{ $service->description }}</h5>
-                        <h5 class="mt-2 text-lg tracking-tight text-white text-center">Detail Paket :</h5>
-
-                        @foreach ($details->where('service_id', $service->id) as $detail)
-                            <div class="flex items-center mb-2 text-white">
-                                <div class="w-6 text-center">
-                                    <i class="{{ $detail->icon }} text-lg"></i>
-                                </div>
-                                <div class="ml-2">
-                                    {{ $detail->option }}
-                                </div>
-                            </div>
-                        @endforeach
-
-                        <a href="#"
-                            class="inline-flex justify-center w-full text-center items-center px-3 py-2 text-sm font-bold text-white bg-gray-700 shadow-xl border-2 border-gray-800 rounded-full hover:bg-[#671282] transition hover:border-white focus:ring-4 focus:outline-none focus:ring-blue-300">
-                            Rp {{ number_format($service->price, 0, ',', '.') }}
-                        </a>
-                        <div class="flex justify-center mt-4 md:mt-6">
-                            <a href="#" data-modal-target="edit-modal{{ $service->id }}"
-                                data-modal-toggle="edit-modal{{ $service->id }}"
-                                class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 transition">Edit</a>
-                            <a href="#" data-modal-target="manage-modal{{ $service->id }}"
-                                data-modal-toggle="manage-modal{{ $service->id }}"
-                                class="inline-flex items-center px-4 py-2 ms-2 text-sm font-medium text-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 transition">Manage</a>
-                            <a href="#" data-modal-target="extralarge-modal{{ $service->id }}"
-                                data-modal-toggle="extralarge-modal{{ $service->id }}"
-                                class="inline-flex items-center px-4 py-2 ms-2 text-sm font-medium text-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 transition">Preview</a>
-                            <a href="#" data-modal-target="delete-modal" data-id="{{ $service->id }}"
-                                data-modal-toggle="delete-modal"
-                                class="py-2 px-4 ms-2 text-sm font-medium text-white focus:outline-none bg-red-700 rounded-lg border border-gray-700 hover:bg-red-800 focus:z-10 focus:ring-4 focus:ring-gray-100 transition delete-btn">Hapus</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Edit modal -->
-                <div id="edit-modal{{ $service->id }}" aria-hidden="true" data-modal-backdrop="static"
-                    class="hidden animate__animated animate__fadeIn animate__faster overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                    <div class="relative p-4 w-full max-w-2xl max-h-full">
-                        <!-- Modal content -->
-                        <div class="relative bg-white rounded-lg shadow">
-                            <!-- Modal header -->
-                            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t border-gray-200">
-                                <h3 class="text-xl font-semibold text-gray-900">
-                                    Edit Layanan
-                                </h3>
-                                <button type="button"
-                                    class="transition text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-                                    data-modal-hide="edit-modal{{ $service->id }}">
-                                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                        fill="none" viewBox="0 0 14 14">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                            stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                                    </svg>
-                                    <span class="sr-only">Tutup</span>
-                                </button>
-                            </div>
-                            <!-- Modal body -->
-                            <form method="post" action="/admin/service/update/{{ $service->id }}"
-                                enctype="multipart/form-data">
-                                @csrf
-                                <div class="p-4 md:p-5 space-y-4">
-                                    <div class="mb-5">
-                                        <label class="block mb-2 text-sm font-medium text-gray-900" for="file_input">Upload
-                                            foto</label>
-                                        <input
-                                            class="transition block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
-                                            id="file_input_edit_{{ $service->id }}" name="image" type="file"
-                                            accept="image/*">
-                                        <input type="hidden" name="old_image" value="{{ $service->image }}">
-                                        <img id="image_preview_edit_{{ $service->id }}"
-                                            src="{{ Storage::url($service->image) }}"
-                                            class="mt-4 w-3/5 rounded-lg {{ $service->image ? '' : 'hidden' }}" />
-                                    </div>
-                                    <div class="mb-5">
-                                        <label for="title" class="block mb-2 text-sm font-medium text-gray-900">Nama
-                                            Paket
-                                            <span class="text-red-700">*</span></label>
-                                        <input type="text" id="title" name="title"
-                                            placeholder="Masukkan Nama Paket"
-                                            class="transition shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                            value="{{ $service->title }}" required />
-                                    </div>
-                                    <div class="mb-5">
-                                        <label for="description"
-                                            class="block mb-2 text-sm font-medium text-gray-900">Deskripsi
-                                            <span class="text-red-700">*</span></label>
-                                        <input type="text" id="description" name="description"
-                                            placeholder="Paket ini sudah termasuk... Periode dari tanggal ... sampai ..."
-                                            value="{{ $service->description }}"
-                                            class="transition shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
-                                    </div>
-                                    <div class="mb-5">
-                                        <label for="price" class="block mb-2 text-sm font-medium text-gray-900">Harga
-                                            <span class="text-red-700">*</span></label>
-                                        <input type="number" id="price" name="price"
-                                            value="{{ $service->price }}" placeholder="10000000(masukkan tanpa titik)"
-                                            class="transition shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
-                                    </div>
-
-                                    <!-- Dynamic Options Input -->
-                                    <div class="mb-5">
-                                        <label for="edit-options-container-{{ $service->id }}"
-                                            class="block mb-2 text-sm font-medium text-gray-900">Detail layanan</label>
-                                        <div id="edit-options-container-{{ $service->id }}">
-                                            @foreach ($details->where('service_id', $service->id) as $index => $detail)
-                                                <div class="flex items-center mb-2">
-                                                    <select class="icon-select mr-2 text-gray-900 text-sm rounded-lg p-2.5"
-                                                        name="options[{{ $index }}][icon]">
-                                                        <option value="fa-solid fa-plane"
-                                                            {{ $detail->icon == 'fa-solid fa-plane' ? 'selected' : '' }}>✈️
-                                                        </option>
-                                                        <option value="fa-solid fa-hotel"
-                                                            {{ $detail->icon == 'fa-solid fa-hotel' ? 'selected' : '' }}>🏨
-                                                        </option>
-                                                        <option value="fa-solid fa-calendar-days"
-                                                            {{ $detail->icon == 'fa-solid fa-calendar-days' ? 'selected' : '' }}>
-                                                            📆</option>
-                                                        <option value="fa-solid fa-location-dot"
-                                                            {{ $detail->icon == 'fa-solid fa-location-dot' ? 'selected' : '' }}>
-                                                            📍</option>
-                                                        <option value="fa-solid fa-car"
-                                                            {{ $detail->icon == 'fa-solid fa-car' ? 'selected' : '' }}>🚘
-                                                        </option>
-                                                    </select>
-                                                    <input type="hidden" name="options[{{ $index }}][id]"
-                                                        value="{{ $detail->id }}">
-                                                    <input type="text" name="options[{{ $index }}][option]"
-                                                        placeholder="Sudah termasuk..." value="{{ $detail->option }}"
-                                                        class="transition shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
-                                                    <button type="button" onclick="removeOption(this)"
-                                                        class="ml-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Hapus</button>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                        <button type="button"
-                                            class="edit-option-btn text-white transition bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 my-1 text-center"
-                                            data-service-id="{{ $service->id }}">Tambah</button>
-                                    </div>
-
-                                </div>
-                                <!-- Modal footer -->
-                                <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b">
-                                    <button type="submit"
-                                        class="text-white transition bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Edit
-                                        Layanan</button>
-                                    <button data-modal-hide="edit-modal{{ $service->id }}" type="button"
-                                        class="py-2.5 px-5 ms-3 transition text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:z-10 focus:ring-4 focus:ring-gray-100">Tutup</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="manage-modal{{ $service->id }}" aria-hidden="true" data-modal-backdrop="static"
-                    class="hidden animate__animated animate__fadeIn animate__faster overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                    <div class="relative p-4 w-full max-w-2xl max-h-full">
-                        <form method="post" action="/admin/service/detail/add/{{ $service->id }}"
-                            enctype="multipart/form-data">
-                            @csrf
-                            <!-- Modal content -->
-                            <div class="relative bg-white rounded-lg shadow">
-                                <!-- Modal header -->
-                                <div
-                                    class="flex items-center justify-between p-4 md:p-5 border-b rounded-t border-gray-200">
-                                    <h3 class="text-xl font-semibold text-gray-900">
-                                        Atur Layanan
-                                    </h3>
-                                    <button type="button"
-                                        class="transition text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-                                        data-modal-hide="manage-modal{{ $service->id }}">
-                                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                            fill="none" viewBox="0 0 14 14">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                                        </svg>
-                                        <span class="sr-only">Tutup</span>
-                                    </button>
-                                </div>
-                                <!-- Modal body -->
-
-                                <div class="p-4 md:p-5 space-y-4">
-                                    @php
-                                        $serviceDetail = $service_details->where('service_id', $service->id)->first();
-                                    @endphp
-
-                                    <div class="mb-5">
-                                        <label for="description" class="block mb-2 text-sm font-medium text-gray-900">
-                                            Deskripsi Tambahan Paket Layanan :</label>
-                                        <textarea name="description" rows="2" id="description"
-                                            class="transition block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                                            placeholder="Deskripsi Tambahan ... (dapat dikosongkan)">{{ $serviceDetail->description ?? '' }}</textarea>
-                                    </div>
-                                    <div class="mb-5">
-                                        <label for="guider" class="block mb-2 text-sm font-medium text-gray-900">
-                                            Nama Tour Leader :</label>
-                                        <input type="text" name="guider" id="guider"
-                                            class="transition block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                                            placeholder="Masukkan Nama" value="{{ $serviceDetail->guider ?? '' }}">
-                                    </div>
-
-
-                                    <!-- Dynamic Options Input -->
-                                    <div class="mb-5">
-                                        <label for="manage-options-container-{{ $service->id }}"
-                                            class="block mb-2 text-sm font-medium text-gray-900">Harga <b
-                                                class="font-bold">sudah</b>
-                                            Termasuk :
-                                            <span class="text-red-700">*</span></label>
-                                        <div id="manage-options-container-{{ $service->id }}">
-                                            <!-- Existing options will be here -->
-                                            @php
-                                                $includedIndex = 0;
-                                                $excludedIndex = 0;
-                                            @endphp
-
-                                            @foreach ($service_details->where('service_id', $service->id) as $service_detail)
-                                                @foreach ($all_details->where('type', '=', 'included')->where('service_detail_id', $service_detail->id) as $all_detail)
-                                                    <div class="flex items-start mb-2">
-                                                        <select
-                                                            class="icon-select mr-2 text-gray-900 text-sm rounded-lg p-2.5"
-                                                            name="included[{{ $includedIndex }}][icon]">
-                                                            <option value="fa-solid fa-plane"
-                                                                {{ $all_detail->icon == 'fa-solid fa-plane' ? 'selected' : '' }}>
-                                                                ✈️</option>
-                                                            <option value="fa-solid fa-hotel"
-                                                                {{ $all_detail->icon == 'fa-solid fa-hotel' ? 'selected' : '' }}>
-                                                                🏨</option>
-                                                            <option value="fa-solid fa-calendar-days"
-                                                                {{ $all_detail->icon == 'fa-solid fa-calendar-days' ? 'selected' : '' }}>
-                                                                📆</option>
-                                                            <option value="fa-solid fa-location-dot"
-                                                                {{ $all_detail->icon == 'fa-solid fa-location-dot' ? 'selected' : '' }}>
-                                                                📍</option>
-                                                            <option value="fa-solid fa-car"
-                                                                {{ $all_detail->icon == 'fa-solid fa-car' ? 'selected' : '' }}>
-                                                                🚘</option>
-                                                            <option value="fa-solid fa-check"
-                                                                {{ $all_detail->icon == 'fa-solid fa-check' ? 'selected' : '' }}>
-                                                                ✔️</option>
-                                                        </select>
-                                                        <div class="flex-1">
-                                                            <input type="hidden"
-                                                                name="included[{{ $includedIndex }}][id]"
-                                                                value="{{ $all_detail->id ?? '' }}">
-                                                            <input type="text"
-                                                                name="included[{{ $includedIndex }}][text]"
-                                                                placeholder="Sudah termasuk..."
-                                                                class="transition shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mb-2"
-                                                                value="{{ $all_detail->text }}" />
-                                                            <textarea name="included[{{ $includedIndex }}][inc_description]" rows="2"
-                                                                class="transition block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                                                                placeholder="Deskripsi Detail ... (dapat dikosongkan)">{{ $all_detail->description }}</textarea>
-                                                        </div>
-                                                        <button type="button" onclick="removeOption(this)"
-                                                            class="ml-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded self-start">Hapus</button>
-                                                    </div>
-                                                    @php
-                                                        $includedIndex++;
-                                                    @endphp
-                                                @endforeach
-                                            @endforeach
-                                        </div>
-                                        <button type="button" id="manage-option-btn-{{ $service->id }}"
-                                            class="text-white transition bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 my-1 text-center">
-                                            Tambah Detail
-                                        </button>
-                                    </div>
-                                    <div class="mb-5">
-                                        <label for="manage-exclude-options-container-{{ $service->id }}"
-                                            class="block mb-2 text-sm font-medium text-gray-900">Harga <b
-                                                class="font-bold">belum</b>
-                                            Termasuk :
-                                            <span class="text-red-700">*</span></label>
-                                        <div id="manage-exclude-options-container-{{ $service->id }}">
-                                            <!-- Existing options will be here -->
-                                            @foreach ($service_details->where('service_id', $service->id) as $service_detail)
-                                                @foreach ($all_details->where('type', '=', 'excluded')->where('service_detail_id', $service_detail->id) as $all_detail)
-                                                    <div class="flex items-start mb-2">
-                                                        <select
-                                                            class="icon-select mr-2 text-gray-900 text-sm rounded-lg p-2.5"
-                                                            name="excluded[{{ $excludedIndex }}][icon]">
-                                                            <option value="fa-solid fa-plane"
-                                                                {{ $all_detail->icon == 'fa-solid fa-plane' ? 'selected' : '' }}>
-                                                                ✈️</option>
-                                                            <option value="fa-solid fa-hotel"
-                                                                {{ $all_detail->icon == 'fa-solid fa-hotel' ? 'selected' : '' }}>
-                                                                🏨</option>
-                                                            <option value="fa-solid fa-calendar-days"
-                                                                {{ $all_detail->icon == 'fa-solid fa-calendar-days' ? 'selected' : '' }}>
-                                                                📆</option>
-                                                            <option value="fa-solid fa-location-dot"
-                                                                {{ $all_detail->icon == 'fa-solid fa-location-dot' ? 'selected' : '' }}>
-                                                                📍</option>
-                                                            <option value="fa-solid fa-car"
-                                                                {{ $all_detail->icon == 'fa-solid fa-car' ? 'selected' : '' }}>
-                                                                🚘</option>
-                                                            <option value="fa-solid fa-xmark"
-                                                                {{ $all_detail->icon == 'fa-solid fa-xmark' ? 'selected' : '' }}>
-                                                                ❌</option>
-                                                        </select>
-                                                        <div class="flex-1">
-                                                            <input type="hidden"
-                                                                name="excluded[{{ $excludedIndex }}][id]"
-                                                                value="{{ $all_detail->id ?? '' }}">
-                                                            <input type="text"
-                                                                name="excluded[{{ $excludedIndex }}][text]"
-                                                                placeholder="Sudah termasuk..."
-                                                                class="transition shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mb-2"
-                                                                value="{{ $all_detail->text }}" />
-                                                            <textarea name="excluded[{{ $excludedIndex }}][exc_description]" rows="2"
-                                                                class="transition block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                                                                placeholder="Deskripsi Detail ... (dapat dikosongkan)">{{ $all_detail->description }}</textarea>
-                                                        </div>
-                                                        <button type="button" onclick="removeOption(this)"
-                                                            class="ml-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded self-start">Hapus</button>
-                                                    </div>
-                                                    @php
-                                                        $excludedIndex++;
-                                                    @endphp
-                                                @endforeach
-                                            @endforeach
-                                        </div>
-                                        <button type="button" id="manage-exclude-option-btn-{{ $service->id }}"
-                                            class="text-white transition bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 my-1 text-center">
-                                            Tambah Detail
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <!-- Modal footer -->
-                                <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b">
-                                    <button type="submit"
-                                        class="text-white transition bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Tambah
-                                        Layanan</button>
-                                    <button data-modal-hide="manage-modal{{ $service->id }}" type="button"
-                                        class="py-2.5 px-5 ms-3 transition text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:z-10 focus:ring-4 focus:ring-gray-100">Tutup</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Details modal -->
-                <div id="extralarge-modal{{ $service->id }}" aria-hidden="true" data-modal-backdrop="static"
-                    class="hidden animate__animated animate__fadeIn animate__faster overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                    <div class="relative w-full max-w-7xl max-h-full mx-auto">
-                        <!-- Modal content -->
-                        <div class="relative bg-white rounded-lg shadow">
-                            <!-- Modal header -->
-                            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t border-gray-200">
-                                <h3 class="text-xl font-semibold text-gray-900">
-                                    Detail Layanan
-                                </h3>
-                                <button type="button"
-                                    class="transition text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-                                    data-modal-hide="extralarge-modal{{ $service->id }}">
-                                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                        fill="none" viewBox="0 0 14 14">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                            stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                                    </svg>
-                                    <span class="sr-only">Tutup</span>
-                                </button>
-                            </div>
-                            <!-- Modal body -->
-                            <div class="p-4 md:p-5 space-y-4">
-                                <div class="mx-auto">
-                                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                        <div class="text-sejarah mx-1 px-4 md:px-8 rounded-lg">
-                                            <img class="h-auto max-w-full rounded-lg"
-                                                src="{{ $service->image ? Storage::url($service->image) : URL::asset('dist/assets/img/kaabah-card.jpg') }}"
-                                                width="300px" alt="image description">
-                                            <h1 class="mt-3 text-3xl font-bold uppercase">{{ $service->title }}</h1>
-                                            <hr class="h-px mb-6 bg-black border-0">
-
-                                            @foreach ($details->where('service_id', $service->id) as $detail)
-                                                <div class="flex items-center mb-2">
-                                                    <div class="w-6 text-center">
-                                                        <i class="{{ $detail->icon }} text-lg"></i>
-                                                    </div>
-                                                    <div class="ml-2">
-                                                        {{ $detail->option }}
-                                                    </div>
-                                                </div>
-                                            @endforeach
-
-                                            <p class="mb-1">Tour Guide :</p>
-                                            @foreach ($service_details->where('service_id', $service->id) as $service_detail)
-                                                <div class="flex items-center mb-2">
-                                                    <div class="w-6 text-center">
-                                                        <i class="fa-solid fa-user-tag text-lg"></i>
-                                                    </div>
-                                                    <div class="ml-2">
-                                                        {{ $service_detail->guider }}
-                                                    </div>
-                                                </div>
-                                            @endforeach
-
-                                        </div>
-                                        <div class="text-sejarah mx-1 px-4 md:px-8 rounded-lg">
-                                            <h3 class="text-xl font-bold mb-1"><i
-                                                    class="fa-regular fa-circle-check mr-3"></i>Harga
-                                                Sudah
-                                                Termasuk</h3>
-                                            <ul class="ml-4 list-disc list-inside mb-6">
-                                                @foreach ($service_details->where('service_id', $service->id) as $service_detail)
-                                                    @foreach ($all_details->where('type', '=', 'included')->where('service_detail_id', $service_detail->id) as $all_detail)
-                                                        <li class="mt-1">{{ $all_detail->text }}
-                                                        </li>
-                                                        @if ($all_detail->description)
-                                                            <p class="mb-1">{{ $all_detail->description }}</p>
-                                                        @endif
-                                                    @endforeach
-                                                @endforeach
-                                            </ul>
-                                        </div>
-                                        <div class="text-sejarah mx-1 px-4 md:px-8 rounded-lg">
-                                            <h3 class="text-xl font-bold mb-1"><i
-                                                    class="fa-regular fa-circle-xmark mr-3"></i>Harga
-                                                Belum
-                                                Termasuk</h3>
-                                            <ul class="ml-4 list-disc list-inside mb-6">
-                                                @foreach ($service_details->where('service_id', $service->id) as $service_detail)
-                                                    @foreach ($all_details->where('type', '=', 'excluded')->where('service_detail_id', $service_detail->id) as $all_detail)
-                                                        <li class="mt-1">{{ $all_detail->text }}
-                                                        </li>
-                                                        @if ($all_detail->description)
-                                                            <p class="mb-1">{{ $all_detail->description }}</p>
-                                                        @endif
-                                                    @endforeach
-                                                @endforeach
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Modal footer -->
-                            <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b">
-                                <button type="submit"
-                                    class="text-white transition bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Beli
-                                    Paket</button>
-                                <button data-modal-hide="extralarge-modal{{ $service->id }}" type="button"
-                                    class="py-2.5 px-5 ms-3 transition text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:z-10 focus:ring-4 focus:ring-gray-100">Tutup</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-        </div>
     </div>
+@endif
 
+@if (session('success'))
+    <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6 flex items-center">
+        <i class="fas fa-check-circle mr-2"></i>
+        {{ session('success') }}
+    </div>
+@endif
 
+<!-- Page Header -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="flex justify-between items-center">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">Kelola Layanan</h1>
+            <p class="text-gray-600 mt-1">Atur dan kelola paket layanan Anda</p>
+        </div>
+        <button onclick="openModal('add-modal')" 
+                class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg flex items-center gap-2 transition-colors duration-200">
+            <i class="fas fa-plus"></i>
+            Tambah Layanan
+        </button>
+    </div>
+</div>
 
-    <!-- Add modal -->
-    <div id="add-modal" aria-hidden="true" data-modal-backdrop="static"
-        class="hidden animate__animated animate__fadeIn animate__faster overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-        <div class="relative p-4 w-full max-w-2xl max-h-full">
-            <!-- Modal content -->
-            <div class="relative bg-white rounded-lg shadow">
-                <!-- Modal header -->
-                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t border-gray-200">
-                    <h3 class="text-xl font-semibold text-gray-900">
-                        Tambah Layanan
-                    </h3>
-                    <button type="button"
-                        class="transition text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-                        data-modal-hide="add-modal">
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                        </svg>
-                        <span class="sr-only">Tutup</span>
+<!-- Services Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    @foreach ($services->sortByDesc('created_at') as $service)
+        <div class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
+            
+            <!-- Service Image -->
+            <div class="h-48 overflow-hidden">
+                <img class="w-full h-full object-cover"
+                     src="{{ $service->image ? Storage::url($service->image) : URL::asset('dist/assets/img/kaabah-card.jpg') }}"
+                     alt="{{ $service->title }}">
+            </div>
+
+            <!-- Service Content -->
+            <div class="p-5">
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $service->title }}</h3>
+                <p class="text-gray-600 text-sm mb-4">{{ $service->description }}</p>
+
+                <!-- Service Details -->
+                <div class="space-y-2 mb-4">
+                    @foreach ($details->where('service_id', $service->id)->take(3) as $detail)
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="{{ $detail->icon }} text-blue-600 w-4 mr-2"></i>
+                            {{ $detail->option }}
+                        </div>
+                    @endforeach
+                    @if($details->where('service_id', $service->id)->count() > 3)
+                        <div class="text-xs text-gray-500">
+                            +{{ $details->where('service_id', $service->id)->count() - 3 }} detail lainnya
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Price -->
+                <div class="bg-gray-50 rounded-lg p-3 mb-4">
+                    <div class="text-2xl font-bold text-blue-600">
+                        Rp {{ number_format($service->price, 0, ',', '.') }}
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex gap-2">
+                    <button onclick="openModal('edit-modal{{ $service->id }}')"
+                            class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm transition-colors duration-200">
+                        Edit
+                    </button>
+                    <button onclick="openModal('manage-modal{{ $service->id }}')"
+                            class="flex-1 bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg text-sm transition-colors duration-200">
+                        Kelola
+                    </button>
+                    <button onclick="openModal('preview-modal{{ $service->id }}')"
+                            class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-2 rounded-lg text-sm transition-colors duration-200">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button onclick="confirmDelete({{ $service->id }})"
+                            class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg text-sm transition-colors duration-200">
+                        <i class="fas fa-trash"></i>
                     </button>
                 </div>
-                <!-- Modal body -->
-                <form method="post" action="/admin/service/post" enctype="multipart/form-data">
+            </div>
+        </div>
+
+        <!-- Edit Modal -->
+        <div id="edit-modal{{ $service->id }}" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto m-4">
+                <div class="flex justify-between items-center p-6 border-b">
+                    <h3 class="text-lg font-semibold">Edit Layanan</h3>
+                    <button onclick="closeModal('edit-modal{{ $service->id }}')" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+
+                <form method="POST" action="/admin/service/update/{{ $service->id }}" enctype="multipart/form-data">
                     @csrf
-                    <div class="p-4 md:p-5 space-y-4">
-                        <div class="mb-5">
-                            <label class="block mb-2 text-sm font-medium text-gray-900" for="file_input">Upload
-                                foto</label>
-                            <input
-                                class="transition block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
-                                id="file_input" name="image" type="file" accept="image/*">
-                            <span class="text-red-700 text-sm font-medium">* disarankan foto dengan resolusi yang
-                                sama</span>
-                            <img id="image_preview" class="mt-4 hidden w-3/5 rounded-lg" />
-                        </div>
-                        <div class="mb-5">
-                            <label for="title" class="block mb-2 text-sm font-medium text-gray-900">Nama Paket <span
-                                    class="text-red-700">*</span></label>
-                            <input type="text" id="title" name="title" placeholder="Masukkan Nama Paket"
-                                class="transition shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                required />
-                        </div>
-                        <div class="mb-5">
-                            <label for="description" class="block mb-2 text-sm font-medium text-gray-900">Deskripsi <span
-                                    class="text-red-700">*</span></label>
-                            <input type="text" id="description" name="description"
-                                placeholder="Paket ini sudah termasuk... Periode dari tanggal ... sampai ..."
-                                class="transition shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
-                        </div>
-                        <div class="mb-5">
-                            <label for="price" class="block mb-2 text-sm font-medium text-gray-900">Harga <span
-                                    class="text-red-700">*</span></label>
-                            <input type="number" id="price" name="price"
-                                placeholder="10000000(masukkan tanpa titik)"
-                                class="transition shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                    <div class="p-6 space-y-4">
+                        
+                        <!-- Image Upload -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Foto Layanan</label>
+                            <div class="border-2 border-dashed border-gray-300 rounded-lg p-4">
+                                <input type="file" id="edit-image-{{ $service->id }}" name="image" accept="image/*" 
+                                       class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                                <input type="hidden" name="old_image" value="{{ $service->image }}">
+                                @if($service->image)
+                                    <img id="edit-preview-{{ $service->id }}" src="{{ Storage::url($service->image) }}" 
+                                         class="mt-4 w-32 h-32 object-cover rounded-lg">
+                                @endif
+                            </div>
                         </div>
 
-                        <!-- Dynamic Options Input -->
-                        <div class="mb-5">
-                            <label for="add-options-container" class="block mb-2 text-sm font-medium text-gray-900">Detail
-                                layanan <span class="text-red-700">*</span></label>
-                            <div id="add-options-container">
-                                <div class="flex items-center mb-2">
-                                    <select name="icons[]" class="mr-2 text-gray-900 text-sm rounded-lg p-2.5">
-                                        <option value="fa-solid fa-plane">✈️</option>
-                                        <option value="fa-solid fa-hotel">🏨</option>
-                                        <option value="fa-solid fa-calendar-days">📆</option>
-                                        <option value="fa-solid fa-location-dot">📍</option>
-                                        <option value="fa-solid fa-car">🚘</option>
-                                        <option value="fa-solid fa-users">👥</option>
-                                    </select>
-                                    <input type="text" name="options[]" placeholder="Sudah termasuk..."
-                                        class="transition shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
-                                    <button type="button" onclick="removeOption(this)"
-                                        class="ml-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Hapus</button>
-                                </div>
+                        <!-- Service Name -->
+                        <div>
+                            <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
+                                Nama Paket <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" id="title" name="title" value="{{ $service->title }}" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+
+                        <!-- Description -->
+                        <div>
+                            <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
+                                Deskripsi <span class="text-red-500">*</span>
+                            </label>
+                            <textarea id="description" name="description" rows="3" required
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">{{ $service->description }}</textarea>
+                        </div>
+
+                        <!-- Price -->
+                        <div>
+                            <label for="price" class="block text-sm font-medium text-gray-700 mb-2">
+                                Harga <span class="text-red-500">*</span>
+                            </label>
+                            <input type="number" id="price" name="price" value="{{ $service->price }}" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+
+                        <!-- Service Details -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Detail Layanan</label>
+                            <div id="edit-details-{{ $service->id }}" class="space-y-3">
+                                @foreach ($details->where('service_id', $service->id) as $index => $detail)
+                                    <div class="flex gap-3 items-center">
+                                        <select name="options[{{ $index }}][icon]" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                            <option value="fa-solid fa-plane" {{ $detail->icon == 'fa-solid fa-plane' ? 'selected' : '' }}>✈️ Pesawat</option>
+                                            <option value="fa-solid fa-hotel" {{ $detail->icon == 'fa-solid fa-hotel' ? 'selected' : '' }}>🏨 Hotel</option>
+                                            <option value="fa-solid fa-calendar-days" {{ $detail->icon == 'fa-solid fa-calendar-days' ? 'selected' : '' }}>📅 Tanggal</option>
+                                            <option value="fa-solid fa-location-dot" {{ $detail->icon == 'fa-solid fa-location-dot' ? 'selected' : '' }}>📍 Lokasi</option>
+                                            <option value="fa-solid fa-car" {{ $detail->icon == 'fa-solid fa-car' ? 'selected' : '' }}>🚗 Transportasi</option>
+                                        </select>
+                                        <input type="hidden" name="options[{{ $index }}][id]" value="{{ $detail->id }}">
+                                        <input type="text" name="options[{{ $index }}][option]" value="{{ $detail->option }}" 
+                                               placeholder="Deskripsi detail..." 
+                                               class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                        <button type="button" onclick="removeDetail(this)" 
+                                                class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                @endforeach
                             </div>
-                            <button type="button" id="add-option-btn"
-                                class="text-white transition bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 my-1 text-center">Tambah</button>
+                            <button type="button" onclick="addDetail('edit-details-{{ $service->id }}')" 
+                                    class="mt-3 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm">
+                                + Tambah Detail
+                            </button>
                         </div>
                     </div>
-                    <!-- Modal footer -->
-                    <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b">
-                        <button type="submit"
-                            class="text-white transition bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Tambah
-                            Layanan</button>
-                        <button data-modal-hide="add-modal" type="button"
-                            class="py-2.5 px-5 ms-3 transition text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:z-10 focus:ring-4 focus:ring-gray-100">Tutup</button>
+
+                    <div class="flex justify-end gap-3 p-6 border-t bg-gray-50">
+                        <button type="button" onclick="closeModal('edit-modal{{ $service->id }}')" 
+                                class="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+                            Batal
+                        </button>
+                        <button type="submit" 
+                                class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
+                            Simpan Perubahan
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
-    </div>
 
-    <!-- Delete modal -->
-    <div id="delete-modal" aria-hidden="true" data-modal-backdrop="static"
-        class="hidden animate__animated animate__fadeIn animate__faster overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-        <div class="relative p-4 w-full max-w-2xl max-h-full">
-            <!-- Modal content -->
-            <div class="relative bg-white rounded-lg shadow">
-                <!-- Modal header -->
-                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t border-gray-200">
-                    <h3 class="text-xl font-semibold text-gray-900">
-                        Hapus
-                    </h3>
-                    <button type="button"
-                        class="transition text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-                        data-modal-hide="delete-modal">
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                        </svg>
-                        <span class="sr-only">Tutup</span>
+        <!-- Manage Modal -->
+        <div id="manage-modal{{ $service->id }}" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto m-4">
+                <div class="flex justify-between items-center p-6 border-b">
+                    <h3 class="text-lg font-semibold">Kelola Detail Layanan</h3>
+                    <button onclick="closeModal('manage-modal{{ $service->id }}')" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times text-xl"></i>
                     </button>
                 </div>
-                <!-- Modal body -->
-                <div class="p-4 md:p-5 space-y-4">
-                    <p>Apakah anda yakin untuk menghapus data ini?</p>
+
+                <form method="POST" action="/admin/service/detail/add/{{ $service->id }}">
+                    @csrf
+                    <div class="p-6 space-y-6">
+                        
+                        <!-- Tour Guide -->
+                        @php $serviceDetail = $service_details->where('service_id', $service->id)->first(); @endphp
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Nama Tour Leader</label>
+                                <input type="text" name="guider" value="{{ $serviceDetail->guider ?? '' }}" 
+                                       placeholder="Masukkan nama tour leader"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Deskripsi Tambahan</label>
+                                <textarea name="description" rows="2" placeholder="Deskripsi tambahan (opsional)"
+                                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">{{ $serviceDetail->description ?? '' }}</textarea>
+                            </div>
+                        </div>
+
+                        <!-- Included Services -->
+                        <div>
+                            <h4 class="text-md font-semibold text-gray-900 mb-3 flex items-center">
+                                <i class="fas fa-check-circle text-green-600 mr-2"></i>
+                                Harga Sudah Termasuk
+                            </h4>
+                            <div id="included-container-{{ $service->id }}" class="space-y-3">
+                                @php $includedIndex = 0; @endphp
+                                @foreach ($service_details->where('service_id', $service->id) as $service_detail)
+                                    @foreach ($all_details->where('type', 'included')->where('service_detail_id', $service_detail->id) as $all_detail)
+                                        <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                                            <div class="flex gap-3 items-start">
+                                                <select name="included[{{ $includedIndex }}][icon]" class="px-3 py-2 border border-gray-300 rounded-lg">
+                                                    <option value="fa-solid fa-check" {{ $all_detail->icon == 'fa-solid fa-check' ? 'selected' : '' }}>✅ Termasuk</option>
+                                                    <option value="fa-solid fa-plane" {{ $all_detail->icon == 'fa-solid fa-plane' ? 'selected' : '' }}>✈️ Pesawat</option>
+                                                    <option value="fa-solid fa-hotel" {{ $all_detail->icon == 'fa-solid fa-hotel' ? 'selected' : '' }}>🏨 Hotel</option>
+                                                    <option value="fa-solid fa-car" {{ $all_detail->icon == 'fa-solid fa-car' ? 'selected' : '' }}>🚗 Transportasi</option>
+                                                </select>
+                                                <div class="flex-1 space-y-2">
+                                                    <input type="hidden" name="included[{{ $includedIndex }}][id]" value="{{ $all_detail->id }}">
+                                                    <input type="text" name="included[{{ $includedIndex }}][text]" value="{{ $all_detail->text }}" 
+                                                           placeholder="Deskripsi layanan..."
+                                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                                    <textarea name="included[{{ $includedIndex }}][inc_description]" rows="2" 
+                                                              placeholder="Detail tambahan (opsional)"
+                                                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">{{ $all_detail->description }}</textarea>
+                                                </div>
+                                                <button type="button" onclick="removeDetail(this)" 
+                                                        class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        @php $includedIndex++; @endphp
+                                    @endforeach
+                                @endforeach
+                            </div>
+                            <button type="button" onclick="addIncludedDetail('included-container-{{ $service->id }}')" 
+                                    class="mt-3 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm">
+                                + Tambah Layanan Termasuk
+                            </button>
+                        </div>
+
+                        <!-- Excluded Services -->
+                        <div>
+                            <h4 class="text-md font-semibold text-gray-900 mb-3 flex items-center">
+                                <i class="fas fa-times-circle text-red-600 mr-2"></i>
+                                Harga Belum Termasuk
+                            </h4>
+                            <div id="excluded-container-{{ $service->id }}" class="space-y-3">
+                                @php $excludedIndex = 0; @endphp
+                                @foreach ($service_details->where('service_id', $service->id) as $service_detail)
+                                    @foreach ($all_details->where('type', 'excluded')->where('service_detail_id', $service_detail->id) as $all_detail)
+                                        <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                                            <div class="flex gap-3 items-start">
+                                                <select name="excluded[{{ $excludedIndex }}][icon]" class="px-3 py-2 border border-gray-300 rounded-lg">
+                                                    <option value="fa-solid fa-xmark" {{ $all_detail->icon == 'fa-solid fa-xmark' ? 'selected' : '' }}>❌ Tidak Termasuk</option>
+                                                    <option value="fa-solid fa-plane" {{ $all_detail->icon == 'fa-solid fa-plane' ? 'selected' : '' }}>✈️ Pesawat</option>
+                                                    <option value="fa-solid fa-hotel" {{ $all_detail->icon == 'fa-solid fa-hotel' ? 'selected' : '' }}>🏨 Hotel</option>
+                                                    <option value="fa-solid fa-car" {{ $all_detail->icon == 'fa-solid fa-car' ? 'selected' : '' }}>🚗 Transportasi</option>
+                                                </select>
+                                                <div class="flex-1 space-y-2">
+                                                    <input type="hidden" name="excluded[{{ $excludedIndex }}][id]" value="{{ $all_detail->id }}">
+                                                    <input type="text" name="excluded[{{ $excludedIndex }}][text]" value="{{ $all_detail->text }}" 
+                                                           placeholder="Deskripsi layanan..."
+                                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                                    <textarea name="excluded[{{ $excludedIndex }}][exc_description]" rows="2" 
+                                                              placeholder="Detail tambahan (opsional)"
+                                                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">{{ $all_detail->description }}</textarea>
+                                                </div>
+                                                <button type="button" onclick="removeDetail(this)" 
+                                                        class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        @php $excludedIndex++; @endphp
+                                    @endforeach
+                                @endforeach
+                            </div>
+                            <button type="button" onclick="addExcludedDetail('excluded-container-{{ $service->id }}')" 
+                                    class="mt-3 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm">
+                                + Tambah Layanan Tidak Termasuk
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end gap-3 p-6 border-t bg-gray-50">
+                        <button type="button" onclick="closeModal('manage-modal{{ $service->id }}')" 
+                                class="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+                            Batal
+                        </button>
+                        <button type="submit" 
+                                class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
+                            Simpan Detail
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Preview Modal -->
+        <div id="preview-modal{{ $service->id }}" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-lg w-full max-w-6xl max-h-[90vh] overflow-y-auto m-4">
+                <div class="flex justify-between items-center p-6 border-b">
+                    <h3 class="text-lg font-semibold">Preview Layanan</h3>
+                    <button onclick="closeModal('preview-modal{{ $service->id }}')" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
                 </div>
-                <!-- Modal footer -->
-                <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b">
-                    <a class="text-white transition bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-                        id="deleteButton">Hapus</a>
-                    <button data-modal-hide="delete-modal" type="button"
-                        class="py-2.5 px-5 ms-3 transition text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:z-10 focus:ring-4 focus:ring-gray-100">Tutup</button>
+
+                <div class="p-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        
+                        <!-- Service Info -->
+                        <div class="lg:col-span-1">
+                            <img class="w-full h-64 object-cover rounded-lg mb-4"
+                                 src="{{ $service->image ? Storage::url($service->image) : URL::asset('dist/assets/img/kaabah-card.jpg') }}"
+                                 alt="{{ $service->title }}">
+                            
+                            <h2 class="text-2xl font-bold text-gray-900 mb-2">{{ $service->title }}</h2>
+                            <p class="text-gray-600 mb-4">{{ $service->description }}</p>
+                            
+                            <div class="bg-blue-50 rounded-lg p-4 mb-4">
+                                <div class="text-2xl font-bold text-blue-600">
+                                    Rp {{ number_format($service->price, 0, ',', '.') }}
+                                </div>
+                            </div>
+
+                            <!-- Basic Details -->
+                            <div class="space-y-2 mb-4">
+                                @foreach ($details->where('service_id', $service->id) as $detail)
+                                    <div class="flex items-center text-sm">
+                                        <i class="{{ $detail->icon }} text-blue-600 w-5 mr-2"></i>
+                                        {{ $detail->option }}
+                                    </div>
+                                @endforeach
+                            </div>
+
+                            <!-- Tour Guide -->
+                            @foreach ($service_details->where('service_id', $service->id) as $service_detail)
+                                @if($service_detail->guider)
+                                    <div class="flex items-center text-sm mb-2">
+                                        <i class="fas fa-user-tag text-blue-600 w-5 mr-2"></i>
+                                        Tour Leader: {{ $service_detail->guider }}
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
+
+                        <!-- Included Services -->
+                        <div class="lg:col-span-1">
+                            <h3 class="text-lg font-semibold text-green-700 mb-4 flex items-center">
+                                <i class="fas fa-check-circle mr-2"></i>
+                                Sudah Termasuk
+                            </h3>
+                            <div class="space-y-3">
+                                @foreach ($service_details->where('service_id', $service->id) as $service_detail)
+                                    @foreach ($all_details->where('type', 'included')->where('service_detail_id', $service_detail->id) as $all_detail)
+                                        <div class="bg-green-50 border border-green-200 rounded-lg p-3">
+                                            <div class="flex items-start">
+                                                <i class="{{ $all_detail->icon }} text-green-600 w-5 mr-2 mt-1"></i>
+                                                <div>
+                                                    <div class="font-medium text-gray-900">{{ $all_detail->text }}</div>
+                                                    @if($all_detail->description)
+                                                        <div class="text-sm text-gray-600 mt-1">{{ $all_detail->description }}</div>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <!-- Excluded Services -->
+                        <div class="lg:col-span-1">
+                            <h3 class="text-lg font-semibold text-red-700 mb-4 flex items-center">
+                                <i class="fas fa-times-circle mr-2"></i>
+                                Belum Termasuk
+                            </h3>
+                            <div class="space-y-3">
+                                @foreach ($service_details->where('service_id', $service->id) as $service_detail)
+                                    @foreach ($all_details->where('type', 'excluded')->where('service_detail_id', $service_detail->id) as $all_detail)
+                                        <div class="bg-red-50 border border-red-200 rounded-lg p-3">
+                                            <div class="flex items-start">
+                                                <i class="{{ $all_detail->icon }} text-red-600 w-5 mr-2 mt-1"></i>
+                                                <div>
+                                                    <div class="font-medium text-gray-900">{{ $all_detail->text }}</div>
+                                                    @if($all_detail->description)
+                                                        <div class="text-sm text-gray-600 mt-1">{{ $all_detail->description }}</div>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-3 p-6 border-t bg-gray-50">
+                    <button onclick="closeModal('preview-modal{{ $service->id }}')" 
+                            class="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+                        Tutup
+                    </button>
                 </div>
             </div>
         </div>
+    @endforeach
+</div>
+
+<!-- Add Service Modal -->
+<div id="add-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto m-4">
+        <div class="flex justify-between items-center p-6 border-b">
+            <h3 class="text-lg font-semibold">Tambah Layanan Baru</h3>
+            <button onclick="closeModal('add-modal')" class="text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <form method="POST" action="/admin/service/post" enctype="multipart/form-data">
+            @csrf
+            <div class="p-6 space-y-4">
+                
+                <!-- Image Upload -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Foto Layanan</label>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-4">
+                        <input type="file" id="add-image" name="image" accept="image/*" 
+                               class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        <img id="add-preview" class="mt-4 w-32 h-32 object-cover rounded-lg hidden">
+                    </div>
+                </div>
+
+                <!-- Service Name -->
+                <div>
+                    <label for="add-title" class="block text-sm font-medium text-gray-700 mb-2">
+                        Nama Paket <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" id="add-title" name="title" required
+                           placeholder="Contoh: Paket Umroh Ekonomi"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+
+                <!-- Description -->
+                <div>
+                    <label for="add-description" class="block text-sm font-medium text-gray-700 mb-2">
+                        Deskripsi <span class="text-red-500">*</span>
+                    </label>
+                    <textarea id="add-description" name="description" rows="3" required
+                              placeholder="Deskripsi singkat tentang paket layanan ini..."
+                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                </div>
+
+                <!-- Price -->
+                <div>
+                    <label for="add-price" class="block text-sm font-medium text-gray-700 mb-2">
+                        Harga <span class="text-red-500">*</span>
+                    </label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-2 text-gray-500">Rp</span>
+                        <input type="number" id="add-price" name="price" required
+                               placeholder="25000000"
+                               class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">Masukkan harga tanpa titik atau koma</p>
+                </div>
+
+                <!-- Service Details -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Detail Layanan <span class="text-red-500">*</span></label>
+                    <div id="add-details" class="space-y-3">
+                        <div class="flex gap-3 items-center">
+                            <select name="icons[]" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                <option value="fa-solid fa-plane">✈️ Pesawat</option>
+                                <option value="fa-solid fa-hotel">🏨 Hotel</option>
+                                <option value="fa-solid fa-calendar-days">📅 Tanggal</option>
+                                <option value="fa-solid fa-location-dot">📍 Lokasi</option>
+                                <option value="fa-solid fa-car">🚗 Transportasi</option>
+                            </select>
+                            <input type="text" name="options[]" 
+                                   placeholder="Contoh: Tiket pesawat PP Jakarta-Jeddah"
+                                   class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                            <button type="button" onclick="removeDetail(this)" 
+                                    class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="button" onclick="addDetail('add-details')" 
+                            class="mt-3 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm">
+                        + Tambah Detail
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-3 p-6 border-t bg-gray-50">
+                <button type="button" onclick="closeModal('add-modal')" 
+                        class="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+                    Batal
+                </button>
+                <button type="submit" 
+                        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
+                    Simpan Layanan
+                </button>
+            </div>
+        </form>
     </div>
+</div>
 
-    <script>
-        $(document).ready(function() {
-            $('.delete-btn').click(function() {
-                var serviceId = $(this).data('id');
-                var deleteUrl = '/admin/service/delete/' + serviceId;
-                $('#deleteButton').attr('href', deleteUrl);
-            });
-
-            function handleFileInputChange(event, previewId) {
-                const file = event.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const preview = document.getElementById(previewId);
-                        preview.src = e.target.result;
-                        preview.classList.remove('hidden');
-                    };
-                    reader.readAsDataURL(file);
-                }
-            }
-
-            document.getElementById('file_input_add').addEventListener('change', function(event) {
-                handleFileInputChange(event, 'image_preview_add');
-            });
-
-            @foreach ($services as $service)
-                document.getElementById('file_input_edit_{{ $service->id }}').addEventListener('change', function(
-                    event) {
-                    handleFileInputChange(event, 'image_preview_edit_{{ $service->id }}');
-                });
-            @endforeach
-        })
-        document.getElementById('file_input').addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const preview = document.getElementById('image_preview');
-                    preview.src = e.target.result;
-                    preview.classList.remove('hidden');
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            // Delegate event for all "Tambah" buttons using a common class
-            document.querySelectorAll('.edit-option-btn').forEach(function(button) {
-                button.addEventListener('click', function() {
-                    const serviceId = button.getAttribute('data-service-id');
-                    const editOptionsContainer = document.getElementById(
-                        `edit-options-container-${serviceId}`);
-
-                    // Create div wrapper for new input and remove button
-                    const optionWrapper = document.createElement('div');
-                    optionWrapper.classList.add('flex', 'items-center', 'mb-2');
-
-                    // Example of determining a new index for dynamic inputs
-                    let newIndex = editOptionsContainer.querySelectorAll('input[name^="options["]')
-                        .length;
-
-                    // Increment newIndex to ensure uniqueness
-                    newIndex++;
-
-                    // Now you can use newIndex to dynamically create new inputs
-                    const newHiddenOptionInput = document.createElement('input');
-                    newHiddenOptionInput.setAttribute('type', 'hidden');
-                    newHiddenOptionInput.setAttribute('name', `options[${newIndex}][id]`);
-                    newHiddenOptionInput.setAttribute('value', '');
-
-                    // Create select element
-                    const newOptionSelect = document.createElement('select');
-                    newOptionSelect.setAttribute('name', `options[${newIndex}][icon]`);
-                    newOptionSelect.classList.add('mr-2', 'text-gray-900', 'text-sm', 'rounded-lg',
-                        'p-2.5');
-                    newOptionSelect.innerHTML = `
-                <option value="fa-solid fa-plane">✈️</option>
-                <option value="fa-solid fa-hotel">🏨</option>
-                <option value="fa-solid fa-calendar-days">📆</option>
-                <option value="fa-solid fa-location-dot">📍</option>
-                <option value="fa-solid fa-car">🚘</option>
-                <option value="fa-solid fa-users">👥</option>
-            `;
-
-                    // Create input element
-                    const newOptionInput = document.createElement('input');
-                    newOptionInput.setAttribute('type', 'text');
-                    newOptionInput.setAttribute('name', `options[${newIndex}][option]`);
-                    newOptionInput.setAttribute('placeholder', 'Sudah termasuk...');
-                    newOptionInput.classList.add('transition', 'shadow-sm', 'bg-gray-50', 'border',
-                        'border-gray-300', 'text-gray-900', 'text-sm', 'rounded-lg',
-                        'focus:ring-blue-500', 'focus:border-blue-500', 'block', 'w-full',
-                        'p-2.5');
-
-                    // Create remove button
-                    const removeButton = document.createElement('button');
-                    removeButton.setAttribute('type', 'button');
-                    removeButton.textContent = 'Hapus';
-                    removeButton.classList.add('ml-2', 'bg-red-500', 'hover:bg-red-700',
-                        'text-white', 'font-bold', 'py-2', 'px-4', 'rounded');
-                    removeButton.addEventListener('click', function() {
-                        editOptionsContainer.removeChild(optionWrapper);
-                    });
-
-                    // Append select, input and remove button to wrapper
-                    optionWrapper.appendChild(newOptionSelect);
-                    optionWrapper.appendChild(newOptionInput);
-                    optionWrapper.appendChild(newHiddenOptionInput);
-                    optionWrapper.appendChild(removeButton);
-
-                    // Append wrapper to container
-                    editOptionsContainer.appendChild(optionWrapper);
-                });
-            });
-
-            // For Add Modal
-            const addOptionBtn = document.getElementById('add-option-btn');
-            const addOptionsContainer = document.getElementById('add-options-container');
-
-            if (addOptionBtn && addOptionsContainer) {
-                addOptionBtn.addEventListener('click', function() {
-                    // Create div wrapper for new input and remove button
-                    const optionWrapper = document.createElement('div');
-                    optionWrapper.classList.add('flex', 'items-center', 'mb-2');
-
-                    // Create select element
-                    const newOptionSelect = document.createElement('select');
-                    newOptionSelect.setAttribute('name', 'icons[]');
-                    newOptionSelect.classList.add('mr-2', 'text-gray-900', 'text-sm', 'rounded-lg',
-                        'p-2.5');
-                    newOptionSelect.innerHTML = `
-            <option value="fa-solid fa-plane">✈️</option>
-            <option value="fa-solid fa-hotel">🏨</option>
-            <option value="fa-solid fa-calendar-days">📆</option>
-            <option value="fa-solid fa-location-dot">📍</option>
-            <option value="fa-solid fa-car">🚘</option>
-        `;
-
-                    // Create input element
-                    const newOptionInput = document.createElement('input');
-                    newOptionInput.setAttribute('type', 'text');
-                    newOptionInput.setAttribute('name', 'options[]');
-                    newOptionInput.setAttribute('placeholder', 'Sudah termasuk...');
-                    newOptionInput.classList.add('transition', 'shadow-sm', 'bg-gray-50', 'border',
-                        'border-gray-300', 'text-gray-900', 'text-sm', 'rounded-lg',
-                        'focus:ring-blue-500', 'focus:border-blue-500', 'block', 'w-full', 'p-2.5');
-
-                    // Create remove button
-                    const removeButton = document.createElement('button');
-                    removeButton.setAttribute('type', 'button');
-                    removeButton.textContent = 'Hapus';
-                    removeButton.classList.add('ml-2', 'bg-red-500', 'hover:bg-red-700', 'text-white',
-                        'font-bold', 'py-2', 'px-4', 'rounded');
-                    removeButton.addEventListener('click', function() {
-                        addOptionsContainer.removeChild(optionWrapper);
-                    });
-
-                    // Append select, input and remove button to wrapper
-                    optionWrapper.appendChild(newOptionSelect);
-                    optionWrapper.appendChild(newOptionInput);
-                    optionWrapper.appendChild(removeButton);
-
-                    // Append wrapper to container
-                    addOptionsContainer.appendChild(optionWrapper);
-                });
-            }
-        });
-
-        let addOptionIndex = {{ $includedIndex ?? 0 + 1 }};
-
-        function addOption(containerId) {
-            addOptionIndex++;
-            const container = document.getElementById(containerId);
-            const optionHtml = `
-                <div class="flex items-start mb-2">
-                    <select class="icon-select mr-2 text-gray-900 text-sm rounded-lg p-2.5" name="included[${addOptionIndex}][icon]">
-                        <option value="fa-solid fa-plane">✈️</option>
-                        <option value="fa-solid fa-hotel">🏨</option>
-                        <option value="fa-solid fa-calendar-days">📆</option>
-                        <option value="fa-solid fa-location-dot">📍</option>
-                        <option value="fa-solid fa-car">🚘</option>
-                        <option value="fa-solid fa-check">✔️</option>
-                    </select>
-                    <div class="flex-1">
-                        <input type="hidden" name="included[${addOptionIndex}][id]">
-                        <input type="text" name="included[${addOptionIndex}][text]" placeholder="Sudah termasuk..." class="transition shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mb-2" />
-                        <textarea name="included[${addOptionIndex}][inc_description]" rows="2" class="transition block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Deskripsi Detail ... (dapat dikosongkan)"></textarea>
-                    </div>
-                    <button type="button" onclick="removeOption(this)" class="ml-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded self-start">Hapus</button>
+<!-- Delete Confirmation Modal -->
+<div id="delete-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg w-full max-w-md m-4">
+        <div class="p-6">
+            <div class="flex items-center mb-4">
+                <div class="bg-red-100 rounded-full p-3 mr-4">
+                    <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
                 </div>
-            `;
-            container.insertAdjacentHTML('beforeend', optionHtml);
-        }
-
-        function removeOption(button) {
-            const optionDiv = button.closest('.flex');
-            optionDiv.remove();
-        }
-
-        document.querySelectorAll('[id^="manage-option-btn-"]').forEach(button => {
-            button.addEventListener('click', function() {
-                const serviceId = this.id.split('-').pop();
-                addOption(`manage-options-container-${serviceId}`);
-            });
-        });
-
-        let addExcludedOptionIndex = {{ $excludedIndex ?? 0 + 1 }};
-
-        function addExcludeOption(containerId) {
-            addExcludedOptionIndex++
-            const container = document.getElementById(containerId);
-            const optionHtml = `
-                <div class="flex items-start mb-2">
-                    <select class="icon-select mr-2 text-gray-900 text-sm rounded-lg p-2.5" name="excluded[${addExcludedOptionIndex}][icon]">
-                        <option value="fa-solid fa-plane">✈️</option>
-                        <option value="fa-solid fa-hotel">🏨</option>
-                        <option value="fa-solid fa-calendar-days">📆</option>
-                        <option value="fa-solid fa-location-dot">📍</option>
-                        <option value="fa-solid fa-car">🚘</option>
-                        <option value="fa-solid fa-xmark">❌</option>
-                    </select>
-                    <div class="flex-1">
-                        <input type="hidden" name="excluded[${addExcludedOptionIndex}][id]">
-                        <input type="text" name="excluded[${addExcludedOptionIndex}][text]" placeholder="Sudah termasuk..." class="transition shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mb-2" />
-                        <textarea name="excluded[${addExcludedOptionIndex}][exc_description]" rows="2" class="transition block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Deskripsi Detail ... (dapat dikosongkan)"></textarea>
-                    </div>
-                    <button type="button" onclick="removeOption(this)" class="ml-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded self-start">Hapus</button>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900">Konfirmasi Hapus</h3>
+                    <p class="text-gray-600">Apakah Anda yakin ingin menghapus layanan ini?</p>
                 </div>
-            `;
-            container.insertAdjacentHTML('beforeend', optionHtml);
+            </div>
+            <p class="text-sm text-gray-500 mb-6">Data yang dihapus tidak dapat dikembalikan.</p>
+            
+            <div class="flex justify-end gap-3">
+                <button onclick="closeModal('delete-modal')" 
+                        class="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+                    Batal
+                </button>
+                <a id="delete-confirm-btn" href="#" 
+                   class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg">
+                    Ya, Hapus
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Modal Functions
+function openModal(modalId) {
+    document.getElementById(modalId).classList.remove('hidden');
+    document.body.classList.add('overflow-hidden');
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).classList.add('hidden');
+    document.body.classList.remove('overflow-hidden');
+}
+
+// Delete Confirmation
+function confirmDelete(serviceId) {
+    const deleteUrl = `/admin/service/delete/${serviceId}`;
+    document.getElementById('delete-confirm-btn').setAttribute('href', deleteUrl);
+    openModal('delete-modal');
+}
+
+// Image Preview Functions
+function setupImagePreview(inputId, previewId) {
+    document.getElementById(inputId).addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        const preview = document.getElementById(previewId);
+        
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        } else {
+            preview.classList.add('hidden');
         }
+    });
+}
 
+// Setup image previews for all forms
+setupImagePreview('add-image', 'add-preview');
+@foreach ($services as $service)
+setupImagePreview('edit-image-{{ $service->id }}', 'edit-preview-{{ $service->id }}');
+@endforeach
 
-        document.querySelectorAll('[id^="manage-exclude-option-btn-"]').forEach(button => {
-            button.addEventListener('click', function() {
-                const serviceId = this.id.split('-').pop();
-                addExcludeOption(`manage-exclude-options-container-${serviceId}`);
-            });
+// Dynamic Detail Management
+let detailCounter = 100; // Start with high number to avoid conflicts
+
+function addDetail(containerId) {
+    detailCounter++;
+    const container = document.getElementById(containerId);
+    const isAddForm = containerId === 'add-details';
+    
+    const detailHtml = `
+        <div class="flex gap-3 items-center">
+            <select name="${isAddForm ? 'icons[]' : `options[${detailCounter}][icon]`}" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                <option value="fa-solid fa-plane">✈️ Pesawat</option>
+                <option value="fa-solid fa-hotel">🏨 Hotel</option>
+                <option value="fa-solid fa-calendar-days">📅 Tanggal</option>
+                <option value="fa-solid fa-location-dot">📍 Lokasi</option>
+                <option value="fa-solid fa-car">🚗 Transportasi</option>
+            </select>
+            ${!isAddForm ? `<input type="hidden" name="options[${detailCounter}][id]" value="">` : ''}
+            <input type="text" name="${isAddForm ? 'options[]' : `options[${detailCounter}][option]`}" 
+                   placeholder="Deskripsi detail..." 
+                   class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+            <button type="button" onclick="removeDetail(this)" 
+                    class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    `;
+    
+    container.insertAdjacentHTML('beforeend', detailHtml);
+}
+
+function removeDetail(button) {
+    button.closest('.flex').remove();
+}
+
+// Included/Excluded Detail Management
+let includedCounter = {{ $includedIndex ?? 0 }} + 100;
+let excludedCounter = {{ $excludedIndex ?? 0 }} + 100;
+
+function addIncludedDetail(containerId) {
+    includedCounter++;
+    const container = document.getElementById(containerId);
+    
+    const detailHtml = `
+        <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+            <div class="flex gap-3 items-start">
+                <select name="included[${includedCounter}][icon]" class="px-3 py-2 border border-gray-300 rounded-lg">
+                    <option value="fa-solid fa-check">✅ Termasuk</option>
+                    <option value="fa-solid fa-plane">✈️ Pesawat</option>
+                    <option value="fa-solid fa-hotel">🏨 Hotel</option>
+                    <option value="fa-solid fa-car">🚗 Transportasi</option>
+                </select>
+                <div class="flex-1 space-y-2">
+                    <input type="hidden" name="included[${includedCounter}][id]" value="">
+                    <input type="text" name="included[${includedCounter}][text]" 
+                           placeholder="Contoh: Hotel bintang 4 di Madinah"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <textarea name="included[${includedCounter}][inc_description]" rows="2" 
+                              placeholder="Detail tambahan (opsional)"
+                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"></textarea>
+                </div>
+                <button type="button" onclick="removeDetail(this)" 
+                        class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
+    `;
+    
+    container.insertAdjacentHTML('beforeend', detailHtml);
+}
+
+function addExcludedDetail(containerId) {
+    excludedCounter++;
+    const container = document.getElementById(containerId);
+    
+    const detailHtml = `
+        <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+            <div class="flex gap-3 items-start">
+                <select name="excluded[${excludedCounter}][icon]" class="px-3 py-2 border border-gray-300 rounded-lg">
+                    <option value="fa-solid fa-xmark">❌ Tidak Termasuk</option>
+                    <option value="fa-solid fa-plane">✈️ Pesawat</option>
+                    <option value="fa-solid fa-hotel">🏨 Hotel</option>
+                    <option value="fa-solid fa-car">🚗 Transportasi</option>
+                </select>
+                <div class="flex-1 space-y-2">
+                    <input type="hidden" name="excluded[${excludedCounter}][id]" value="">
+                    <input type="text" name="excluded[${excludedCounter}][text]" 
+                           placeholder="Contoh: Tiket masuk tempat wisata"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <textarea name="excluded[${excludedCounter}][exc_description]" rows="2" 
+                              placeholder="Detail tambahan (opsional)"
+                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"></textarea>
+                </div>
+                <button type="button" onclick="removeDetail(this)" 
+                        class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
+    `;
+    
+    container.insertAdjacentHTML('beforeend', detailHtml);
+}
+
+// // Close modal when clicking outside
+// document.addEventListener('click', function(event) {
+//     if (event.target.classList.contains('fixed') && event.target.classList.contains('inset-0')) {
+//         const modalId = event.target.id;
+//         if (modalId) {
+//             closeModal(modalId);
+//         }
+//     }
+// });
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        const openModals = document.querySelectorAll('.fixed:not(.hidden)');
+        openModals.forEach(modal => {
+            if (modal.id) {
+                closeModal(modal.id);
+            }
         });
+    }
+});
 
-        function removeOption(button) {
-            const optionDiv = button.closest('.flex');
-            optionDiv.remove();
-        }
+// Format price input
+document.addEventListener('DOMContentLoaded', function() {
+    const priceInputs = document.querySelectorAll('input[type="number"][name="price"]');
+    priceInputs.forEach(input => {
+        input.addEventListener('input', function() {
+            // Remove any non-digit characters
+            this.value = this.value.replace(/\D/g, '');
+        });
+    });
+});
+</script>
 
-        // Function to remove option dynamically based on button context
-        function removeOption(button) {
-            const optionWrapper = button.parentElement;
-            const optionsContainer = optionWrapper.parentElement;
-            optionsContainer.removeChild(optionWrapper);
-        }
-    </script>
 @endsection

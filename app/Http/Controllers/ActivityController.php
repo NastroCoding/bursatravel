@@ -27,9 +27,7 @@ class ActivityController extends Controller
             'title' => 'required|string',
             'description' => 'required',
             'date' => 'required|date',
-            'topic_title' => 'string',
-            'topic_subtopic' => 'string',
-            'topic_description' => 'string',
+            'type' => 'required|string',
         ]);
 
         $activity = new Activity;
@@ -38,9 +36,7 @@ class ActivityController extends Controller
         $activity->trademark = $request->author ?? 'Administrator';
         $activity->date = $validatedData['date'];
         $activity->slug = Str::slug($validatedData['title'], '-');
-        $activity->topic_title = $validatedData['topic_title'] ?? '';
-        $activity->topic_subtitle = $validatedData['topic_subtopic'] ?? '';
-        $activity->topic_description = $validatedData['topic_description'] ?? '';
+        $activity->type = $validatedData['type'] ?? '';
         $activity->created_by = Auth::user()->id;
 
         if ($request->hasFile('image')) {
@@ -77,10 +73,8 @@ class ActivityController extends Controller
             'image.*' => 'image|mimes:jpg,png,jpeg,gif,webp',
             'title' => 'required|string',
             'description' => 'required',
+            'type' => 'required|string',
             'date' => 'required|date',
-            'topic_title' => 'string|nullable',
-            'topic_subtopic' => 'string|nullable',
-            'topic_description' => 'string|nullable',
         ]);
 
         // Find the activity by ID
@@ -90,9 +84,7 @@ class ActivityController extends Controller
         $activity->trademark = $request->author ?? 'Administrator';
         $activity->date = $validatedData['date'];
         $activity->slug = Str::slug($validatedData['title'], '-');
-        $activity->topic_title = $validatedData['topic_title'] ?? '';
-        $activity->topic_subtitle = $validatedData['topic_subtopic'] ?? '';
-        $activity->topic_description = $validatedData['topic_description'] ?? '';
+        $activity->type = $validatedData['type'] ?? '';
         $activity->created_by = Auth::user()->id;
 
         if ($request->hasFile('image')) {

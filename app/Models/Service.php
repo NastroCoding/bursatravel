@@ -12,6 +12,6 @@ class Service extends Model
     protected $guarded = [];
 
     public function options(){
-        // return $this->hasMany(ServiceOption::class);
+        return $this->hasMany(ServiceOption::class);
     }
 }
