@@ -647,7 +647,7 @@ if ($testimony->youtube_url && strpos($testimony->youtube_url, 'shorts') !== fal
                             }
                         @endphp
                         <div class="gallery-item group cursor-pointer overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
-                            onclick="openGalleryModal('{{ Storage::url($gallery->media) }}', '{{ $gallery->description }}', '{{ $is_video ? $ext : '' }}')">
+                            onclick="openGalleryModal({{ json_encode(Storage::url($gallery->media)) }}, {{ json_encode($gallery->description) }}, {{ json_encode($is_video ? $ext : '') }})">
                             <div class="relative overflow-hidden">
                                 @if ($is_video)
                                     <video src="{{ Storage::url($gallery->media) }}" controls
@@ -699,29 +699,29 @@ if ($testimony->youtube_url && strpos($testimony->youtube_url, 'shorts') !== fal
 
     <script>
         function openGalleryModal(mediaUrl, caption, type) {
-            const modal = document.getElementById('galleryModal');
-            const modalImage = document.getElementById('modalImage');
-            const modalVideo = document.getElementById('modalVideo');
-            const modalVideoSource = document.getElementById('modalVideoSource');
-            const modalCaption = document.getElementById('modalCaption');
+            const modal = document.getElementById("galleryModal");
+            const modalImage = document.getElementById("modalImage");
+            const modalVideo = document.getElementById("modalVideo");
+            const modalVideoSource = document.getElementById("modalVideoSource");
+            const modalCaption = document.getElementById("modalCaption");
 
-            if (type === 'mp4' || type === 'webm' || type === 'ogg') {
-                modalImage.classList.add('hidden');
-                modalVideo.classList.remove('hidden');
+            if (type === "mp4" || type === "webm" || type === "ogg") {
+                modalImage.classList.add("hidden");
+                modalVideo.classList.remove("hidden");
                 modalVideoSource.src = mediaUrl;
                 modalVideo.load();
             } else {
-                modalVideo.classList.add('hidden');
-                modalImage.classList.remove('hidden');
+                modalVideo.classList.add("hidden");
+                modalImage.classList.remove("hidden");
                 modalImage.src = mediaUrl;
             }
             modalCaption.textContent = caption;
-            modal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
+            modal.classList.remove("hidden");
+            document.body.style.overflow = "hidden";
 
             // Close on escape key
             document.onkeydown = function(e) {
-                if (e.key === 'Escape') closeGalleryModal();
+                if (e.key === "Escape") closeGalleryModal();
             };
 
             // Close on background click
@@ -731,10 +731,10 @@ if ($testimony->youtube_url && strpos($testimony->youtube_url, 'shorts') !== fal
         }
 
         function closeGalleryModal() {
-            const modal = document.getElementById('galleryModal');
-            const modalVideo = document.getElementById('modalVideo');
-            modal.classList.add('hidden');
-            document.body.style.overflow = '';
+            const modal = document.getElementById("galleryModal");
+            const modalVideo = document.getElementById("modalVideo");
+            modal.classList.add("hidden");
+            document.body.style.overflow = "";
             modalVideo.pause();
             // Remove event listeners
             document.onkeydown = null;
