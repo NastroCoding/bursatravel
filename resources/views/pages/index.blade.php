@@ -24,9 +24,8 @@
     <section class="py-16 bg-white">
         <div class="container mx-auto px-4">
             <div class="text-center mb-12">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Our Journey Highlights</h2>
-                <p class="text-gray-600 max-w-2xl mx-auto">Experience the beauty of sacred destinations and comfortable
-                    travel through our curated gallery</p>
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Moment Kebersamaan Kami</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Ayo bangun moment kebersamaan umroh bersama kami, berikut ada testimoni jama'ah.</p>
             </div>
 
             <div class="relative max-w-8xl mx-auto">
@@ -66,16 +65,17 @@
                     @endforeach
                 </div>
             </div>
+            
             <!-- Testimonials Grid Display -->
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 p-4 mx-auto">
                 @foreach ($testimonials->sortByDesc('created_at') as $testimony)
                     @php
-                        // Enhanced YouTube URL parsing
+                        // Optimized YouTube ID extraction (supports youtube.com, youtu.be, youtube shorts)
                         $youtube_id = null;
                         if ($testimony->youtube_url) {
                             if (
                                 preg_match(
-                                    '/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/',
+                                    '/(?:youtube\.com\/(?:shorts\/|watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/',
                                     $testimony->youtube_url,
                                     $matches,
                                 )
@@ -85,21 +85,34 @@
                                 $youtube_id = $testimony->youtube_url;
                             }
                         }
+                        // Check if it's a YouTube Shorts URL
+$is_short = false;
+if ($testimony->youtube_url && strpos($testimony->youtube_url, 'shorts') !== false) {
+                            $is_short = true;
+                        }
                     @endphp
 
                     @if ($youtube_id)
                         <!-- Full YouTube Embed Card -->
                         <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                            <div class="w-full aspect-video">
-                                <iframe class="w-full h-full"
-                                    src="https://www.youtube.com/embed/{{ $youtube_id }}?rel=0&modestbranding=1"
-                                    title="YouTube video player" frameborder="0"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
-                                </iframe>
+                            <div class="w-full flex justify-center items-center" style="background: #000;">
+                                @if ($is_short)
+                                    <iframe class="w-[320px] h-[568px] md:w-[360px] md:h-[640px] rounded-lg"
+                                        src="https://www.youtube.com/embed/{{ $youtube_id }}?rel=0&modestbranding=1"
+                                        title="YouTube Shorts player" frameborder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                        style="aspect-ratio: 9/16; background: #000;">
+                                    </iframe>
+                                @else
+                                    <iframe class="w-full h-full aspect-video"
+                                        src="https://www.youtube.com/embed/{{ $youtube_id }}?rel=0&modestbranding=1"
+                                        title="YouTube video player" frameborder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+                                    </iframe>
+                                @endif
                             </div>
-
-                            <!-- Small overlay with name and actions -->
                             <div class="p-4">
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center space-x-3">
@@ -182,16 +195,74 @@
         </div>
     </section>
 
+    <!-- Promotion Banner -->
+    @if ($configs->img_info)
+        <section class="bg-gray-100 py-16">
+            <div class="container mx-auto px-4">
+                <div class="relative rounded-2xl overflow-hidden shadow-2xl">
+                    <!-- Banner Image -->
+                    <img src="{{ Storage::url($configs->img_info) }}" alt="Promotion Banner"
+                        class="w-full max-h-64 object-cover">
+
+                    <!-- Overlay Gradient -->
+                    <div class="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent">
+                        <div class="absolute bottom-8 left-8 md:bottom-12 md:left-12 max-w-xl">
+                            @if ($configs->title_info)
+                                <h2 class="text-2xl md:text-4xl font-bold text-white mb-4">
+                                    {{ $configs->title_info }}
+                                </h2>
+                            @endif
+                            @if ($configs->info)
+                                <p class="text-white/90 text-sm md:text-base mb-6">
+                                    {{ $configs->info }}
+                                </p>
+                            @endif
+                            <a href="https://wa.me/+62{{ $configs->whatsapp_num }}"
+                                class="inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors duration-200">
+                                <i class="ri-whatsapp-line mr-2 text-lg"></i>
+                                Hubungi Kami
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    @endif
+
+    @if ($items->isNotEmpty())
+        <!-- Item Showcase -->
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                        Perlengkapan Umroh & Haji
+                    </h2>
+                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                        Berikut perlengkapan umroh & haji yang disediakan oleh Bursa.
+                    </p>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
+                    @foreach ($items as $item)
+                        <div
+                            class="aspect-square overflow-hidden rounded-full bg-gray-50 p-2 hover:shadow-lg transition-shadow duration-300">
+                            <img src="{{ Storage::url($item->image) }}" alt="{{ $item->caption }}"
+                                class="w-full h-full object-contain" loading="lazy">
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
 
     <section class="py-16 bg-gray-50" id="activities">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Section Header -->
             <div class="text-center mb-12">
                 <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                    Recent Activities
+                    Kegiatan Bursa
                 </h2>
                 <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                    Discover our latest activities, news updates, and inspiring quotes
+                    Berikut kegiatan terkini dari Bursa Travel.
                 </p>
             </div>
 
@@ -200,15 +271,15 @@
                 <div class="bg-white rounded-xl p-1 shadow-sm border border-gray-200">
                     <button class="filter-btn active px-6 py-3 text-sm font-medium rounded-lg transition-all duration-200"
                         data-filter="all">
-                        All Activities
+                        Semua Postingan
                     </button>
                     <button class="filter-btn px-6 py-3 text-sm font-medium rounded-lg transition-all duration-200"
                         data-filter="aktifitas">
-                        Activities
+                        Aktifitas
                     </button>
                     <button class="filter-btn px-6 py-3 text-sm font-medium rounded-lg transition-all duration-200"
                         data-filter="berita">
-                        News
+                        Berita
                     </button>
                     <button class="filter-btn px-6 py-3 text-sm font-medium rounded-lg transition-all duration-200"
                         data-filter="quotes">
@@ -246,8 +317,8 @@
                             <div class="absolute top-4 left-4">
                                 <span
                                     class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-sm uppercase
-                                @if ($activity->type == 'Aktifitas') bg-blue-500/90 text-white
-                                @elseif($activity->type == 'Berita') bg-green-500/90 text-white
+                                @if ($activity->type == 'aktifitas') bg-blue-500/90 text-white
+                                @elseif($activity->type == 'berita') bg-green-500/90 text-white
                                 @else bg-purple-500/90 text-white @endif">
                                     {{ $activity->type }}
                                 </span>
@@ -309,7 +380,7 @@
                 <div class="text-center mt-12">
                     <a href="/activities"
                         class="inline-flex items-center px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl">
-                        <span>View All Activities</span>
+                        <span>Lihat Semua Aktifitas</span>
                         <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -327,8 +398,8 @@
                                 d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
                     </div>
-                    <h3 class="text-xl font-medium text-gray-900 mb-2">No activities yet</h3>
-                    <p class="text-gray-600">Check back later for updates and new content.</p>
+                    <h3 class="text-xl font-medium text-gray-900 mb-2">Tidak ada aktifitas terkini.</h3>
+                    <p class="text-gray-600">Silahkan cek kembali.</p>
                 </div>
             @endif
         </div>
@@ -567,12 +638,24 @@
             <div class="max-w-7xl mx-auto">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach ($galleries->sortByDesc('created_at')->take(6) as $gallery)
-                        <!-- Gallery Item 1 -->
-                        <div
-                            class="gallery-item group cursor-pointer overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+                        @php
+                            $is_video = false;
+                            $media = $gallery->media;
+                            $ext = strtolower(pathinfo($media, PATHINFO_EXTENSION));
+                            if (in_array($ext, ['mp4', 'webm', 'ogg'])) {
+                                $is_video = true;
+                            }
+                        @endphp
+                        <div class="gallery-item group cursor-pointer overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
+                            onclick="openGalleryModal('{{ Storage::url($gallery->media) }}', '{{ $gallery->description }}', '{{ $is_video ? $ext : '' }}')">
                             <div class="relative overflow-hidden">
-                                <img src="{{ Storage::url($gallery->media) }}" alt="Masjid Al-Haram"
-                                    class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110" />
+                                @if ($is_video)
+                                    <video src="{{ Storage::url($gallery->media) }}" controls
+                                        class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110 bg-black"></video>
+                                @else
+                                    <img src="{{ Storage::url($gallery->media) }}" alt="Masjid Al-Haram"
+                                        class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110" />
+                                @endif
                                 <div
                                     class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                     <div class="absolute bottom-4 left-4 text-white">
@@ -589,62 +672,75 @@
         </div>
     </section>
 
-    <section class="section__container banner__container">
-        <div class="banner__card">
-            <h4>10+</h4>
-            <p>Years Experience</p>
-        </div>
-        <div class="banner__card">
-            <h4>12k</h4>
-            <p>Happy Clients</p>
-        </div>
-        <div class="banner__card">
-            <h4>4.8</h4>
-            <p>Overrall Ratings</p>
-        </div>
-    </section>
+    <!-- Gallery Modal -->
+    <div id="galleryModal" class="fixed inset-0 z-50 hidden overflow-auto bg-black/90 backdrop-blur-sm">
+        <div class="min-h-screen flex items-center justify-center p-4">
+            <div class="relative max-w-7xl w-full">
+                <!-- Close Button -->
+                <button onclick="closeGalleryModal()"
+                    class="absolute top-0 right-0 m-4 text-white hover:text-gray-300 z-50">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
 
-    <section class="section__container discover__container">
-        <h2 class="section__header">
-            Discover Peace, Culture, and Devotion with Our Temple Bus Travels
-        </h2>
-        <p class="section__description">
-            Witness Stunning Landscapes from the Comfort of Your Bus Seat"
-        </p>
-        <div class="discover__grid">
-            <div class="discover__card">
-                <span><i class="ri-camera-lens-line"></i></span>
-                <h4>Your Road, Your Story</h4>
-                <p>
-                    Experience the freedom of travel with our comfortable and reliable
-                    bus trips. Enjoy stunning views along the way while relaxing in
-                    spacious seats. Whether it's a short trip or a long journey, our
-                    buses ensure a smooth and enjoyable ride.
-                </p>
-            </div>
-            <div class="discover__card">
-                <span><i class="ri-ship-line"></i></span>
-                <h4>Coastal Wonders</h4>
-                <p>
-                    Embark on a journey through the mesmerizing coastal wonders. Enjoy
-                    the serene beauty of pristine beaches, stunning cliffs, and
-                    breathtaking ocean views, all from the comfort of our bus. Let the
-                    coastal breeze guide you to unforgettable destinations.
-                </p>
-            </div>
-            <div class="discover__card">
-                <span><i class="ri-landscape-line"></i></span>
-                <h4>Historic Landmarks</h4>
-                <p>
-                    Explore the charm of historic landmarks on our specially curated bus
-                    tours. Our comfortable buses will take you through iconic sites,
-                    offering insights into their fascinating stories. Sit back, relax,
-                    and immerse yourself in the rich history that each destination
-                    holds.
-                </p>
+                <!-- Media Container -->
+                <div class="relative flex flex-col items-center">
+                    <img id="modalImage" src="" alt="Gallery Image" class="mx-auto max-h-[80vh] w-auto hidden">
+                    <video id="modalVideo" controls class="mx-auto max-h-[80vh] w-auto bg-black hidden">
+                        <source id="modalVideoSource" src="" type="">
+                        Browser Anda tidak mendukung video.
+                    </video>
+                    <p id="modalCaption" class="text-white text-center mt-4 text-lg"></p>
+                </div>
             </div>
         </div>
-    </section>
+    </div>
+
+    <script>
+        function openGalleryModal(mediaUrl, caption, type) {
+            const modal = document.getElementById('galleryModal');
+            const modalImage = document.getElementById('modalImage');
+            const modalVideo = document.getElementById('modalVideo');
+            const modalVideoSource = document.getElementById('modalVideoSource');
+            const modalCaption = document.getElementById('modalCaption');
+
+            if (type === 'mp4' || type === 'webm' || type === 'ogg') {
+                modalImage.classList.add('hidden');
+                modalVideo.classList.remove('hidden');
+                modalVideoSource.src = mediaUrl;
+                modalVideo.load();
+            } else {
+                modalVideo.classList.add('hidden');
+                modalImage.classList.remove('hidden');
+                modalImage.src = mediaUrl;
+            }
+            modalCaption.textContent = caption;
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+
+            // Close on escape key
+            document.onkeydown = function(e) {
+                if (e.key === 'Escape') closeGalleryModal();
+            };
+
+            // Close on background click
+            modal.onclick = function(e) {
+                if (e.target === modal) closeGalleryModal();
+            };
+        }
+
+        function closeGalleryModal() {
+            const modal = document.getElementById('galleryModal');
+            const modalVideo = document.getElementById('modalVideo');
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+            modalVideo.pause();
+            // Remove event listeners
+            document.onkeydown = null;
+            modal.onclick = null;
+        }
+    </script>
 
     <script>
         class ImageCarousel {

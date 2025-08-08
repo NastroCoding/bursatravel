@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Kelimatu | {{ $page }}</title>
+    <title>Bursa | {{ $page }}</title>
     <link rel="shortcut icon" href="{{ URL::asset('dist/assets/ico/favicon.ico') }}" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/flowbite@2.4.1/dist/flowbite.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.4.1/dist/flowbite.min.js"></script>
@@ -40,10 +40,10 @@
                     </svg>
                 </button>
                 <a href="/" class="flex ms-2 md:me-24">
-                    <img src="{{ URL::asset('dist/assets/img/kelimatu_logo.png') }}" class="h-8 me-3"
-                        alt="Kelimatu Logo" />
+                    <img src="{{ URL::asset('img/bursa_logo.png') }}" class="h-8 me-3"
+                        alt="Bursa Logo" />
                     <span
-                        class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap text-[#671282]">Kelimatu</span>
+                        class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap text-[#702c94]">Bursa</span>
                 </a>
             </div>
             <div class="flex items-center">

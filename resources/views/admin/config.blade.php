@@ -17,7 +17,7 @@
     <h1 class="text-3xl">Konfigurasi</h1>
 
     <div class="grid grid-cols-1 gap-6 mb-8 mt-8">
-        <button id="background-button" class="bg-green-800 text-white px-4 py-2 rounded">Preview Background Halaman
+        {{-- <button id="background-button" class="bg-green-800 text-white px-4 py-2 rounded">Preview Background Halaman
             Depan</button>
         <div id="background-container" class="hidden mt-2 animate__animated animate__fadeIn animate__faster">
             <button type="button" data-modal-target="jumbotron-modal" data-modal-toggle="jumbotron-modal"
@@ -118,8 +118,8 @@
                     </h3>
                 </div>
             </div>
-        </div>
-        <button id="content-button" class="bg-green-800 text-white px-4 py-2 rounded">Preview Konten Halaman Depan</button>
+        </div> --}}
+        <button id="content-button" class="bg-green-800 text-white px-4 py-2 rounded">Preview Konten Promo Halaman Depan</button>
         <div id="content-container" class="hidden mt-2 animate__animated animate__fadeIn animate__faster">
             <section class="bg-gray-700">
                 <button type="button" data-modal-target="content-modal" data-modal-toggle="content-modal"

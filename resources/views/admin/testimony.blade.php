@@ -130,14 +130,14 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 p-4">
         @foreach ($testimonials->sortByDesc('created_at') as $testimony)
             @php
-                // Enhanced YouTube URL parsing
+                // Optimized YouTube ID extraction (supports youtube.com, youtu.be, youtube shorts)
                 $youtube_id = null;
                 if ($testimony->youtube_url) {
                     if (
                         preg_match(
-                            '/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/',
+                            '/(?:youtube\.com\/(?:shorts\/|watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/',
                             $testimony->youtube_url,
-                            $matches,
+                            $matches
                         )
                     ) {
                         $youtube_id = $matches[1];

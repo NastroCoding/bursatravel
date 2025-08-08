@@ -76,8 +76,8 @@
                     <!-- Type Badge -->
                     <div class="mb-3">
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium uppercase
-                            @if($activity->type == 'Aktifitas') bg-blue-100 text-blue-800
-                            @elseif($activity->type == 'Berita') bg-green-100 text-green-800
+                            @if($activity->type == 'aktifitas') bg-blue-100 text-blue-800
+                            @elseif($activity->type == 'berita') bg-green-100 text-green-800
                             @else bg-purple-100 text-purple-800 @endif">
                             {{ $activity->type }}
                         </span>

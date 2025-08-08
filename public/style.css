@@ -97,7 +97,7 @@ nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: var(--primary-color);
+  background-color: white;
 }
 
 .nav__logo .logo {
@@ -107,7 +107,7 @@ nav {
 
 .nav__menu__btn {
   font-size: 1.5rem;
-  color: var(--white);
+  color: var(--primary-color);
   cursor: pointer;
 }
 
