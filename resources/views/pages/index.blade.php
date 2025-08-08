@@ -8,7 +8,8 @@
                 <h1><span class="grad">BURSA &nbsp;</span> Umroh Haji <span class="text-red-500">Indo</span><span
                         class="text-white">nesia</span></h1>
                 <div class="header__btns">
-                    <button class="btn">Pesan Kursi Sekarang!</button>
+                    <button class="btn" type="submit" data-modal-target="contact-modal-display"
+                        data-modal-toggle="contact-modal-display">Pesan Kursi Sekarang!</button>
                     <a href="#">
                         <span><i class="ri-whatsapp-line"></i></span>
                     </a>
@@ -20,12 +21,73 @@
         </div>
     </header>
 
+    <!-- Contact modal -->
+    <div id="contact-modal-display" aria-hidden="true" data-modal-backdrop="static"
+        class="hidden animate__animated animate__fadeIn animate__faster overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative p-4 w-full max-w-md max-h-full">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-xl shadow-xl overflow-hidden">
+                <!-- Modal header -->
+                <div class="bg-gradient-to-r from-green-500 to-green-600 p-6 text-center">
+                    <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="ri-customer-service-2-line text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Kontak Kami</h3>
+                    <p class="text-green-100 text-sm">Hubungi admin untuk konsultasi dan pemesanan</p>
+                    <button type="button"
+                        class="absolute top-4 right-4 text-white/80 hover:text-white bg-white/10 hover:bg-white/20 rounded-full w-8 h-8 flex items-center justify-center transition-all duration-200"
+                        data-modal-hide="contact-modal-display">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                            </path>
+                        </svg>
+                        <span class="sr-only">Tutup</span>
+                    </button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="p-6 space-y-4">
+                    <div class="space-y-3">
+                        <a href="https://wa.me/62{{ $configs->whatsapp_num }}"
+                            class="w-full flex items-center justify-center space-x-3 p-4 border-2 border-green-500 text-green-600 bg-white hover:bg-green-500 hover:text-white rounded-xl transition-all duration-200 font-medium">
+                            <i class="ri-whatsapp-line text-xl"></i>
+                            <span>Kontak Admin 1</span>
+                        </a>
+                        @if ($configs->whatsapp_num2)
+                            <a href="https://wa.me/62{{ $configs->whatsapp_num2 }}"
+                                class="w-full flex items-center justify-center space-x-3 p-4 border-2 border-green-500 text-green-600 bg-white hover:bg-green-500 hover:text-white rounded-xl transition-all duration-200 font-medium">
+                                <i class="ri-whatsapp-line text-xl"></i>
+                                <span>Kontak Admin 2</span>
+                            </a>
+                        @endif
+                    </div>
+                    <div class="text-center pt-4 border-t border-gray-100">
+                        <p class="text-gray-600 text-sm">
+                            <i class="ri-time-line mr-1"></i>
+                            Respon cepat dalam 5 menit
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="bg-gray-50 px-6 py-4 border-t border-gray-100">
+                    <button data-modal-hide="contact-modal-display" type="button"
+                        class="w-full px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-4 focus:ring-gray-100 transition-all duration-200">
+                        <i class="ri-arrow-left-line mr-2"></i>
+                        Tutup
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Image Carousel -->
     <section class="py-16 bg-white">
         <div class="container mx-auto px-4">
             <div class="text-center mb-12">
                 <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Moment Kebersamaan Kami</h2>
-                <p class="text-gray-600 max-w-2xl mx-auto">Ayo bangun moment kebersamaan umroh bersama kami, berikut ada testimoni jama'ah.</p>
+                <p class="text-gray-600 max-w-2xl mx-auto">Ayo bangun moment kebersamaan umroh bersama kami, berikut ada
+                    testimoni jama'ah.</p>
             </div>
 
             <div class="relative max-w-8xl mx-auto">
@@ -65,9 +127,9 @@
                     @endforeach
                 </div>
             </div>
-            
+
             <!-- Testimonials Grid Display -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 p-4 mx-auto">
+            <div class="max-w-8xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
                 @foreach ($testimonials->sortByDesc('created_at') as $testimony)
                     @php
                         // Optimized YouTube ID extraction (supports youtube.com, youtu.be, youtube shorts)
@@ -85,11 +147,16 @@
                                 $youtube_id = $testimony->youtube_url;
                             }
                         }
-                        // Check if it's a YouTube Shorts URL
-$is_short = false;
-if ($testimony->youtube_url && strpos($testimony->youtube_url, 'shorts') !== false) {
+
+                        // Detect if $testimony->video is actually an image or video
+                        $filePath = $testimony->video;
+                        $extension = $filePath ? strtolower(pathinfo($filePath, PATHINFO_EXTENSION)) : null;
+                        $is_short = false;
+                        if ($testimony->youtube_url && strpos($testimony->youtube_url, 'shorts') !== false) {
                             $is_short = true;
                         }
+                        $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
+                        $isVideo = in_array($extension, ['mp4', 'webm', 'ogg']);
                     @endphp
 
                     @if ($youtube_id)
@@ -97,7 +164,7 @@ if ($testimony->youtube_url && strpos($testimony->youtube_url, 'shorts') !== fal
                         <div class="bg-white rounded-lg shadow-md overflow-hidden">
                             <div class="w-full flex justify-center items-center" style="background: #000;">
                                 @if ($is_short)
-                                    <iframe class="w-[320px] h-[568px] md:w-[360px] md:h-[640px] rounded-lg"
+                                    <iframe class="w-[320px] h-[568px] md:w-[360px] md:h-[640px]"
                                         src="https://www.youtube.com/embed/{{ $youtube_id }}?rel=0&modestbranding=1"
                                         title="YouTube Shorts player" frameborder="0"
                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -113,12 +180,14 @@ if ($testimony->youtube_url && strpos($testimony->youtube_url, 'shorts') !== fal
                                     </iframe>
                                 @endif
                             </div>
+
+                            <!-- Small overlay with name and actions -->
                             <div class="p-4">
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center space-x-3">
                                         <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-gray-200">
                                             @if ($testimony->image)
-                                                <img src="{{ Storage::url($testimony->image) }}"
+                                                <img src="{{ Storage::url($testimony->image) ?? 'https://placehold.co/40' }}"
                                                     alt="{{ $testimony->name }}" class="w-full h-full object-cover">
                                             @endif
                                         </div>
@@ -129,15 +198,14 @@ if ($testimony->youtube_url && strpos($testimony->youtube_url, 'shorts') !== fal
                                             @endif
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
-                    @elseif($testimony->video)
+                    @elseif ($isVideo)
                         <!-- Full Video Card -->
                         <div class="bg-white rounded-lg shadow-md overflow-hidden">
                             <div class="w-full aspect-video">
-                                <video controls class="w-full h-full" preload="metadata">
+                                <video controls class="w-[320px] h-[568px] md:w-[360px] md:h-[640px]" preload="metadata">
                                     <source src="{{ Storage::url($testimony->video) }}" type="video/mp4">
                                     <source src="{{ Storage::url($testimony->video) }}" type="video/webm">
                                     <source src="{{ Storage::url($testimony->video) }}" type="video/ogg">
@@ -152,7 +220,7 @@ if ($testimony->youtube_url && strpos($testimony->youtube_url, 'shorts') !== fal
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center space-x-3">
                                         <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-gray-200">
-                                            <img src="{{ $testimony->image ? Storage::url($testimony->image) : 'https://via.placeholder.com/40' }}"
+                                            <img src="{{ Storage::url($testimony->image) ?? 'https://placehold.co/40' }}"
                                                 alt="{{ $testimony->name }}" class="w-full h-full object-cover">
                                         </div>
                                         <div>
@@ -162,7 +230,32 @@ if ($testimony->youtube_url && strpos($testimony->youtube_url, 'shorts') !== fal
                                             @endif
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    @elseif ($isImage)
+                        <!-- Full Image Card -->
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                            <div class="w-full aspect-video">
+                                <img src="{{ Storage::url($testimony->video) }}" alt="{{ $testimony->name }}"
+                                    class="w-[320px] h-[568px] md:w-[360px] md:h-[640px] mx-auto object-contain">
+                            </div>
 
+                            <!-- Small overlay with name and actions -->
+                            <div class="p-4">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-gray-200">
+                                            <img src="https://placehold.co/40" alt=""
+                                                class="w-full h-full object-cover">
+                                        </div>
+                                        <div>
+                                            <h3 class="font-semibold text-sm">{{ $testimony->name }}</h3>
+                                            @if ($testimony->caption)
+                                                <p class="text-gray-500 text-xs">{{ $testimony->caption }}</p>
+                                            @endif
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -171,7 +264,7 @@ if ($testimony->youtube_url && strpos($testimony->youtube_url, 'shorts') !== fal
                         <div class="bg-white p-6 rounded-lg shadow-md flex flex-col items-center text-center">
                             <!-- Profile Image -->
                             <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-gray-200 mb-4">
-                                <img src="{{ $testimony->image ? Storage::url($testimony->image) : 'https://via.placeholder.com/100' }}"
+                                <img src="{{ $testimony->image ? Storage::url($testimony->image) : 'https://placehold.co/40' }}"
                                     alt="{{ $testimony->name }}" class="w-full h-full object-cover">
                             </div>
 
@@ -187,9 +280,40 @@ if ($testimony->youtube_url && strpos($testimony->youtube_url, 'shorts') !== fal
                             <p class="text-gray-700 mb-4">
                                 {{ $testimony->description }}
                             </p>
-
                         </div>
                     @endif
+                @endforeach
+            </div>
+            <div class="max-w-8xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+                @foreach ($galleries->sortByDesc('created_at')->take(6) as $gallery)
+                    @php
+                        $is_video = false;
+                        $media = $gallery->media;
+                        $ext = strtolower(pathinfo($media, PATHINFO_EXTENSION));
+                        if (in_array($ext, ['mp4', 'webm', 'ogg'])) {
+                            $is_video = true;
+                        }
+                    @endphp
+                    <div class="gallery-item group cursor-pointer overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
+                        onclick="openGalleryModal({{ json_encode(Storage::url($gallery->media)) }}, {{ json_encode($gallery->description) }}, {{ json_encode($is_video ? $ext : '') }})">
+                        <div class="relative overflow-hidden">
+                            @if ($is_video)
+                                <video src="{{ Storage::url($gallery->media) }}" controls
+                                    class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110 bg-black"></video>
+                            @else
+                                <img src="{{ Storage::url($gallery->media) }}" alt="Masjid Al-Haram"
+                                    class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110" />
+                            @endif
+                            <div
+                                class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <div class="absolute bottom-4 left-4 text-white">
+                                    <h3 class="text-lg font-semibold">{{ $gallery->description }}</h3>
+                                    <p class="text-sm opacity-90">
+                                        {{ \Carbon\Carbon::parse($gallery->date)->translatedFormat('d F Y') }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 @endforeach
             </div>
         </div>
@@ -568,107 +692,289 @@ if ($testimony->youtube_url && strpos($testimony->youtube_url, 'shorts') !== fal
         });
     </script>
 
-    <section class="section__container journey__container" id="tour">
-        <h2 class="section__header">Bus Travel, the Easy Way!</h2>
-        <p class="section__description">
-            Effortless planning for Your Next Adventure
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16" id="tour">
+        <h2 class="section__header">Layanan Jasa Kami</h2>
+        <p class="section__description pb-8">
+            Berikut adalah jasa yang kami tawarkan!
         </p>
-        <div class="journey__grid">
-            <div class="journey__card">
-                <div class="journey__card__bg">
-                    <span><i class="ri-bookmark-3-line"></i></span>
-                    <h4>Seamless Booking Process</h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            @foreach ($services->sortByDesc('created_at')->take(3) as $service)
+                <!-- Card 1 -->
+                <div
+                    class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 h-auto">
+                    <div class="h-48 overflow-hidden">
+                        <img src="{{ $service->image ? Storage::url($service->image) : URL::asset('dist/assets/img/kaabah-card.jpg') }}"
+                            alt="Badrinath Temple"
+                            class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+                    </div>
+                    <div class="p-6 space-y-4">
+                        <div class="space-y-3">
+                            <h4 class="text-xl font-bold text-gray-800 leading-tight">{{ $service->title }}</h4>
+                            {{-- <p class="text-sm text-gray-600 font-medium">{{ $service->created_at->format('M, Y') }}</p> --}}
+                            <p class="text-gray-700 leading-relaxed text-sm">
+                                {{ $service->description ? Str::limit($service->description, 100) : 'Deskripsi tidak tersedia.' }}
+                            </p>
+                        </div>
+                        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                            <div class="flex items-center space-x-1 text-green-500">
+                                {{-- <i class="ri-money-dollar-circle-line text-lg"></i> --}}
+                                <span class="font-semibold text-gray-800">Rp
+                                    {{ number_format($service->price, 0, ',', '.') }}</span>
+                            </div>
+                            <button data-modal-show="extralarge-modal{{ $service->id }}"
+                                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 text-sm font-medium">
+                                Detail
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div class="journey__card__content">
-                    <span><i class="ri-bookmark-3-line"></i></span>
-                    <h4>Seat Booking, one Click Away</h4>
-                    <p>
-                        From booking tickets to tracking your bus in real-time, everything
-                        is just a click away. No more long queues or last-minute confusion
-                        — plan, book, and board with complete ease. Your journey,
-                        simplified.
-                    </p>
-                </div>
-            </div>
-
-            <div class="journey__card">
-                <div class="journey__card__bg">
-                    <span><i class="ri-landscape-fill"></i></span>
-                    <h4>Tailored Itineraries</h4>
-                </div>
-                <div class="journey__card__content">
-                    <span><i class="ri-landscape-fill"></i></span>
-                    <h4>Customized Plans Just for You</h4>
-                    <p>
-                        Everyone travels differently — that's why we create plans just for
-                        you. From preferred timings to budget-friendly options and seat
-                        choices, enjoy a trip designed around your lifestyle.
-                    </p>
-                </div>
-            </div>
-
-            <div class="journey__card">
-                <div class="journey__card__bg">
-                    <span><i class="ri-map-2-line"></i></span>
-                    <h4>Expert Local Insights</h4>
-                </div>
-                <div class="journey__card__content">
-                    <span><i class="ri-map-2-line"></i></span>
-                    <h4>Insider Tips and Recommendations</h4>
-                    <p>
-                        From the best boarding points to local travel hacks, our insights
-                        are powered by real people who know the roads. It's local
-                        knowledge, delivered straight to your screen.
-                    </p>
-                </div>
-            </div>
+            @endforeach
         </div>
+
+
+        @foreach ($services as $service)
+            <div id="extralarge-modal{{ $service->id }}" aria-hidden="true" data-modal-backdrop="static"
+                class="hidden animate__animated animate__fadeIn animate__faster overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                <div class="relative w-full max-w-6xl max-h-full mx-auto p-4">
+                    <!-- Modal content -->
+                    <div class="relative bg-white rounded-xl shadow-xl overflow-hidden">
+                        <!-- Modal header -->
+                        <div class="relative h-48 overflow-hidden">
+                            <img class="w-full h-full object-cover"
+                                src="{{ $service->image ? Storage::url($service->image) : URL::asset('dist/assets/img/kaabah-card.jpg') }}"
+                                alt="{{ $service->title }}">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                            <div class="absolute top-4 right-4">
+                                <button type="button"
+                                    class="text-white bg-black/30 hover:bg-black/50 backdrop-blur-sm rounded-full w-10 h-10 flex items-center justify-center transition-all duration-200"
+                                    data-modal-hide="extralarge-modal{{ $service->id }}">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                    <span class="sr-only">Tutup</span>
+                                </button>
+                            </div>
+                            <div class="absolute bottom-4 left-6">
+                                <h3 class="text-2xl font-bold text-white mb-1">{{ $service->title }}</h3>
+                                <div class="flex items-center space-x-1 text-yellow-400">
+                                    <i class="ri-star-fill text-lg"></i>
+                                    <span class="font-semibold text-white">4.8</span>
+                                    <span class="text-white/80 text-sm ml-2">Detail Layanan</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal body -->
+                        <div class="p-6 space-y-6">
+                            <!-- Price Section -->
+                            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100">
+                                <div class="text-center">
+                                    <p class="text-3xl font-bold text-gray-900 mb-2">
+                                        Rp {{ number_format($service->price, 0, ',', '.') }}
+                                    </p>
+                                    <p class="text-gray-600">per paket</p>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                <!-- Service Details -->
+                                <div class="bg-white rounded-xl border border-gray-100 p-6 space-y-4">
+                                    <h4 class="text-lg font-bold text-gray-900 flex items-center">
+                                        <i class="ri-service-line text-blue-600 mr-2"></i>
+                                        Fasilitas Paket
+                                    </h4>
+                                    <div class="space-y-3">
+                                        @foreach ($details->where('service_id', $service->id) as $detail)
+                                            <div
+                                                class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors">
+                                                <div
+                                                    class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                                    <i class="{{ $detail->icon }} text-blue-600 text-sm"></i>
+                                                </div>
+                                                <span class="text-gray-700 text-sm">{{ $detail->option }}</span>
+                                            </div>
+                                        @endforeach
+                                    </div>
+
+                                    <!-- Tour Guide Section -->
+                                    <div class="pt-4 border-t border-gray-100">
+                                        <h5 class="font-semibold text-gray-900 mb-3 flex items-center">
+                                            <i class="ri-user-star-line text-green-600 mr-2"></i>
+                                            Tour Guide
+                                        </h5>
+                                        @foreach ($service_details->where('service_id', $service->id) as $service_detail)
+                                            <div
+                                                class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors">
+                                                <div
+                                                    class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                                    <i class="fa-solid fa-user-tag text-green-600 text-sm"></i>
+                                                </div>
+                                                <span class="text-gray-700 text-sm">{{ $service_detail->guider }}</span>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+
+                                <!-- Included Section -->
+                                <div class="bg-white rounded-xl border border-gray-100 p-6 space-y-4">
+                                    <h4 class="text-lg font-bold text-gray-900 flex items-center">
+                                        <i class="ri-check-double-line text-green-600 mr-2"></i>
+                                        Harga Sudah Termasuk
+                                    </h4>
+                                    <div class="space-y-2">
+                                        @foreach ($service_details->where('service_id', $service->id) as $service_detail)
+                                            @foreach ($all_details->where('type', '=', 'included')->where('service_detail_id', $service_detail->id) as $all_detail)
+                                                <div
+                                                    class="flex items-start space-x-3 p-2 rounded-lg hover:bg-green-50 transition-colors">
+                                                    <div
+                                                        class="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                                                        <i class="ri-check-line text-green-600 text-xs"></i>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-gray-700 text-sm">{{ $all_detail->text }}</p>
+                                                        @if ($all_detail->description)
+                                                            <p class="text-gray-500 text-xs mt-1">
+                                                                {{ $all_detail->description }}</p>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        @endforeach
+                                    </div>
+                                </div>
+
+                                <!-- Excluded Section -->
+                                <div class="bg-white rounded-xl border border-gray-100 p-6 space-y-4">
+                                    <h4 class="text-lg font-bold text-gray-900 flex items-center">
+                                        <i class="ri-close-circle-line text-red-600 mr-2"></i>
+                                        Harga Belum Termasuk
+                                    </h4>
+                                    <div class="space-y-2">
+                                        @foreach ($service_details->where('service_id', $service->id) as $service_detail)
+                                            @foreach ($all_details->where('type', '=', 'excluded')->where('service_detail_id', $service_detail->id) as $all_detail)
+                                                <div
+                                                    class="flex items-start space-x-3 p-2 rounded-lg hover:bg-red-50 transition-colors">
+                                                    <div
+                                                        class="w-5 h-5 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                                                        <i class="ri-close-line text-red-600 text-xs"></i>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-gray-700 text-sm">{{ $all_detail->text }}</p>
+                                                        @if ($all_detail->description)
+                                                            <p class="text-gray-500 text-xs mt-1">
+                                                                {{ $all_detail->description }}</p>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="bg-gray-50 px-6 py-4 border-t border-gray-100">
+                            <div class="flex items-center justify-between">
+                                <div class="text-sm text-gray-600">
+                                    <i class="ri-shield-check-line mr-1"></i>
+                                    Garansi kepuasan 100%
+                                </div>
+                                <div class="flex space-x-3">
+                                    <button data-modal-hide="extralarge-modal{{ $service->id }}" type="button"
+                                        class="px-6 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-4 focus:ring-gray-100 transition-all duration-200">
+                                        Tutup
+                                    </button>
+                                    <button type="submit" data-modal-target="contact-modal"
+                                        data-modal-toggle="contact-modal"
+                                        data-modal-hide="extralarge-modal{{ $service->id }}"
+                                        class="px-6 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 transition-all duration-200 flex items-center space-x-2">
+                                        <i class="ri-shopping-cart-line"></i>
+                                        <span>Beli Paket</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact modal -->
+            <div id="contact-modal" aria-hidden="true" data-modal-backdrop="static"
+                class="hidden animate__animated animate__fadeIn animate__faster overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                <div class="relative p-4 w-full max-w-md max-h-full">
+                    <!-- Modal content -->
+                    <div class="relative bg-white rounded-xl shadow-xl overflow-hidden">
+                        <!-- Modal header -->
+                        <div class="bg-gradient-to-r from-green-500 to-green-600 p-6 text-center">
+                            <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="ri-customer-service-2-line text-white text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-2">Kontak Kami</h3>
+                            <p class="text-green-100 text-sm">Hubungi admin untuk konsultasi dan pemesanan</p>
+                            <button type="button"
+                                class="absolute top-4 right-4 text-white/80 hover:text-white bg-white/10 hover:bg-white/20 rounded-full w-8 h-8 flex items-center justify-center transition-all duration-200"
+                                data-modal-hide="contact-modal">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                                <span class="sr-only">Tutup</span>
+                            </button>
+                        </div>
+
+                        <!-- Modal body -->
+                        <div class="p-6 space-y-4">
+                            <div class="space-y-3">
+                                <a href="https://wa.me/62{{ $configs->whatsapp_num }}"
+                                    class="w-full flex items-center justify-center space-x-3 p-4 border-2 border-green-500 text-green-600 bg-white hover:bg-green-500 hover:text-white rounded-xl transition-all duration-200 font-medium">
+                                    <i class="ri-whatsapp-line text-xl"></i>
+                                    <span>Kontak Admin 1</span>
+                                </a>
+                                @if ($configs->whatsapp_num2)
+                                    <a href="https://wa.me/62{{ $configs->whatsapp_num2 }}"
+                                        class="w-full flex items-center justify-center space-x-3 p-4 border-2 border-green-500 text-green-600 bg-white hover:bg-green-500 hover:text-white rounded-xl transition-all duration-200 font-medium">
+                                        <i class="ri-whatsapp-line text-xl"></i>
+                                        <span>Kontak Admin 2</span>
+                                    </a>
+                                @endif
+                            </div>
+                            <div class="text-center pt-4 border-t border-gray-100">
+                                <p class="text-gray-600 text-sm">
+                                    <i class="ri-time-line mr-1"></i>
+                                    Respon cepat dalam 5 menit
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="bg-gray-50 px-6 py-4 border-t border-gray-100">
+                            <button data-modal-hide="contact-modal" type="button"
+                                data-modal-target="extralarge-modal{{ $service->id }}"
+                                data-modal-toggle="extralarge-modal{{ $service->id }}"
+                                class="w-full px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-4 focus:ring-gray-100 transition-all duration-200">
+                                <i class="ri-arrow-left-line mr-2"></i>
+                                Kembali ke Detail
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
     </section>
 
     <!-- Gallery Section -->
     <section class="py-16 bg-gray-50">
         <div class="container mx-auto px-4">
             <div class="text-center mb-12">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Travel Memories</h2>
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Memori Kebersamaan Kami</h2>
                 <p class="text-gray-600 max-w-2xl mx-auto">
-                    Capture the beautiful moments and sacred experiences from our pilgrimage journeys
+                    Ayo bangun memori bersama Bursa Umroh Haji Indonesia!
                 </p>
             </div>
 
-            <div class="max-w-7xl mx-auto">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    @foreach ($galleries->sortByDesc('created_at')->take(6) as $gallery)
-                        @php
-                            $is_video = false;
-                            $media = $gallery->media;
-                            $ext = strtolower(pathinfo($media, PATHINFO_EXTENSION));
-                            if (in_array($ext, ['mp4', 'webm', 'ogg'])) {
-                                $is_video = true;
-                            }
-                        @endphp
-                        <div class="gallery-item group cursor-pointer overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
-                            onclick="openGalleryModal({{ json_encode(Storage::url($gallery->media)) }}, {{ json_encode($gallery->description) }}, {{ json_encode($is_video ? $ext : '') }})">
-                            <div class="relative overflow-hidden">
-                                @if ($is_video)
-                                    <video src="{{ Storage::url($gallery->media) }}" controls
-                                        class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110 bg-black"></video>
-                                @else
-                                    <img src="{{ Storage::url($gallery->media) }}" alt="Masjid Al-Haram"
-                                        class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110" />
-                                @endif
-                                <div
-                                    class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                    <div class="absolute bottom-4 left-4 text-white">
-                                        <h3 class="text-lg font-semibold">{{ $gallery->description }}</h3>
-                                        <p class="text-sm opacity-90">
-                                            {{ \Carbon\Carbon::parse($gallery->date)->translatedFormat('d F Y') }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
+
         </div>
     </section>
 
@@ -696,6 +1002,48 @@ if ($testimony->youtube_url && strpos($testimony->youtube_url, 'shorts') !== fal
             </div>
         </div>
     </div>
+
+    <section class="section__container discover__container">
+        <h2 class="section__header">
+            Discover Peace, Culture, and Devotion with Our Temple Bus Travels
+        </h2>
+        <p class="section__description">
+            Witness Stunning Landscapes from the Comfort of Your Bus Seat"
+        </p>
+        <div class="discover__grid">
+            <div class="discover__card">
+                <span><i class="ri-camera-lens-line"></i></span>
+                <h4>Your Road, Your Story</h4>
+                <p>
+                    Experience the freedom of travel with our comfortable and reliable
+                    bus trips. Enjoy stunning views along the way while relaxing in
+                    spacious seats. Whether it's a short trip or a long journey, our
+                    buses ensure a smooth and enjoyable ride.
+                </p>
+            </div>
+            <div class="discover__card">
+                <span><i class="ri-ship-line"></i></span>
+                <h4>Coastal Wonders</h4>
+                <p>
+                    Embark on a journey through the mesmerizing coastal wonders. Enjoy
+                    the serene beauty of pristine beaches, stunning cliffs, and
+                    breathtaking ocean views, all from the comfort of our bus. Let the
+                    coastal breeze guide you to unforgettable destinations.
+                </p>
+            </div>
+            <div class="discover__card">
+                <span><i class="ri-landscape-line"></i></span>
+                <h4>Historic Landmarks</h4>
+                <p>
+                    Explore the charm of historic landmarks on our specially curated bus
+                    tours. Our comfortable buses will take you through iconic sites,
+                    offering insights into their fascinating stories. Sit back, relax,
+                    and immerse yourself in the rich history that each destination
+                    holds.
+                </p>
+            </div>
+        </div>
+    </section>
 
     <script>
         function openGalleryModal(mediaUrl, caption, type) {
@@ -850,6 +1198,18 @@ if ($testimony->youtube_url && strpos($testimony->youtube_url, 'shorts') !== fal
         // Initialize carousel when DOM is loaded
         document.addEventListener('DOMContentLoaded', () => {
             new ImageCarousel();
+        });
+    </script>
+
+    <script>
+        // Add scroll event listener for navbar
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
         });
     </script>
 @endsection

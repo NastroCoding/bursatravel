@@ -30,12 +30,20 @@ class RouteController extends Controller
         $slideshows = Slideshow::all();
         $activities = Activity::all();
         $galleries = Gallery::latest()->take(6)->get();
+        $details = ServiceOption::all();
+        $services = Service::all();
+        $service_details = ServiceDetail::all();
+        $all_details = AllServiceDetail::all();
         return view('pages.index', [
             'page'  => 'Index',
             'testimonials' => $testimonials,
             'items' => $items,
             'slideshows' => $slideshows,
             'activities' => $activities,
+            'services' => $services,
+            'details' => $details,
+            'all_details' => $all_details,
+            'service_details' => $service_details,
             'galleries' => $galleries
         ], compact('configs'));
     }

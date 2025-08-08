@@ -27,7 +27,7 @@ class TestimonialController extends Controller
             'caption' => 'nullable|string',
             'description' => 'required|string',
             'youtube_url' => 'nullable|string',
-            'video' => 'nullable|file|mimetypes:video/mp4,video/webm,video/ogg',
+            'video' => 'nullable|file|mimetypes:video/mp4,video/webm,video/ogg,image/*',
         ]);
 
         if ($request->hasFile('image')) {
@@ -35,7 +35,7 @@ class TestimonialController extends Controller
         }
 
         if ($request->hasFile('video')) {
-            $data['video'] = $request->file('video')->store('testimonial-videos', 'public');
+            $data['video'] = $request->file('video')->store('testimonial-medias', 'public');
         }
 
         $data['created_by'] = auth()->id();

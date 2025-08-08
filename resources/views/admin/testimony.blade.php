@@ -96,13 +96,12 @@
                                 <span class="text-gray-500 text-xs">Masukkan URL YouTube untuk video testimoni</span>
                             </div>
 
-                            <!-- Video Upload Input -->
+                            <!-- Video/Photo Upload Input -->
                             <div class="mb-4">
-                                <label class="block mb-2 text-sm font-medium text-gray-900">Upload Video</label>
-                                <input type="file" name="video" accept="video/mp4,video/webm,video/ogg"
+                                <label class="block mb-2 text-sm font-medium text-gray-900">Upload Video/Foto</label>
+                                <input type="file" name="video" accept="video/mp4,video/webm,video/ogg,image/*"
                                     class="transition block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
-                                <span class="text-gray-500 text-xs">Format yang didukung: MP4, WebM, OGG (maksimal
-                                    50MB)</span>
+                                <span class="text-gray-500 text-xs">Format yang didukung: MP4, WebM, OGG, JPG, PNG, JPEG, GIF (maksimal 50MB)</span>
                             </div>
 
                             <div class="mt-2 p-2 bg-blue-50 rounded border-l-4 border-blue-400">
@@ -128,156 +127,205 @@
     </div>
     <!-- Testimonials Grid Display -->
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 p-4">
-        @foreach ($testimonials->sortByDesc('created_at') as $testimony)
-            @php
-                // Optimized YouTube ID extraction (supports youtube.com, youtu.be, youtube shorts)
-                $youtube_id = null;
-                if ($testimony->youtube_url) {
-                    if (
-                        preg_match(
-                            '/(?:youtube\.com\/(?:shorts\/|watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/',
-                            $testimony->youtube_url,
-                            $matches
-                        )
-                    ) {
-                        $youtube_id = $matches[1];
-                    } elseif (preg_match('/^([a-zA-Z0-9_-]{11})$/', $testimony->youtube_url)) {
-                        $youtube_id = $testimony->youtube_url;
-                    }
+    @foreach ($testimonials->sortByDesc('created_at') as $testimony)
+        @php
+            // Optimized YouTube ID extraction (supports youtube.com, youtu.be, youtube shorts)
+            $youtube_id = null;
+            if ($testimony->youtube_url) {
+                if (
+                    preg_match(
+                        '/(?:youtube\.com\/(?:shorts\/|watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/',
+                        $testimony->youtube_url,
+                        $matches
+                    )
+                ) {
+                    $youtube_id = $matches[1];
+                } elseif (preg_match('/^([a-zA-Z0-9_-]{11})$/', $testimony->youtube_url)) {
+                    $youtube_id = $testimony->youtube_url;
                 }
-            @endphp
+            }
 
-            @if ($youtube_id)
-                <!-- Full YouTube Embed Card -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <div class="w-full aspect-video">
-                        <iframe class="w-full h-full"
-                            src="https://www.youtube.com/embed/{{ $youtube_id }}?rel=0&modestbranding=1"
-                            title="YouTube video player" frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
-                        </iframe>
-                    </div>
+            // Detect if $testimony->video is actually an image or video
+            $filePath = $testimony->video;
+            $extension = $filePath ? strtolower(pathinfo($filePath, PATHINFO_EXTENSION)) : null;
+            $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
+            $isVideo = in_array($extension, ['mp4', 'webm', 'ogg']);
+        @endphp
 
-                    <!-- Small overlay with name and actions -->
-                    <div class="p-4">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-gray-200">
-                                    @if ($testimony->image)
-                                        <img src="{{ Storage::url($testimony->image) }}" alt="{{ $testimony->name }}"
-                                            class="w-full h-full object-cover">
-                                    @endif
-                                </div>
-                                <div>
-                                    <h3 class="font-semibold text-sm">{{ $testimony->name }}</h3>
-                                    @if ($testimony->caption)
-                                        <p class="text-gray-500 text-xs">{{ $testimony->caption }}</p>
-                                    @endif
-                                </div>
+        @if ($youtube_id)
+            <!-- Full YouTube Embed Card -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="w-full aspect-video">
+                    <iframe class="w-full h-full"
+                        src="https://www.youtube.com/embed/{{ $youtube_id }}?rel=0&modestbranding=1"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+                    </iframe>
+                </div>
+
+                <!-- Small overlay with name and actions -->
+                <div class="p-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-gray-200">
+                                @if ($testimony->image)
+                                    <img src="{{ Storage::url($testimony->image) ?? "https://placehold.co/40" }}" alt="{{ $testimony->name }}"
+                                        class="w-full h-full object-cover">
+                                @endif
                             </div>
-
-                            <!-- Action Buttons -->
-                            <div class="flex space-x-2">
-                                <button data-modal-target="edit-modal-{{ $testimony->id }}"
-                                    data-modal-toggle="edit-modal-{{ $testimony->id }}"
-                                    class="inline-flex items-center px-3 py-1 text-xs font-medium text-center text-white bg-blue-700 rounded hover:bg-blue-800 transition">
-                                    Edit
-                                </button>
-                                <a href="#" data-modal-target="delete-modal" data-modal-toggle="delete-modal"
-                                    data-id="{{ $testimony->id }}"
-                                    class="delete-btn px-3 py-1 text-xs font-medium text-white bg-red-700 rounded hover:bg-red-800 transition">
-                                    Hapus
-                                </a>
+                            <div>
+                                <h3 class="font-semibold text-sm">{{ $testimony->name }}</h3>
+                                @if ($testimony->caption)
+                                    <p class="text-gray-500 text-xs">{{ $testimony->caption }}</p>
+                                @endif
                             </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex space-x-2">
+                            <button data-modal-target="edit-modal-{{ $testimony->id }}"
+                                data-modal-toggle="edit-modal-{{ $testimony->id }}"
+                                class="inline-flex items-center px-3 py-1 text-xs font-medium text-center text-white bg-blue-700 rounded hover:bg-blue-800 transition">
+                                Edit
+                            </button>
+                            <a href="#" data-modal-target="delete-modal" data-modal-toggle="delete-modal"
+                                data-id="{{ $testimony->id }}"
+                                class="delete-btn px-3 py-1 text-xs font-medium text-white bg-red-700 rounded hover:bg-red-800 transition">
+                                Hapus
+                            </a>
                         </div>
                     </div>
                 </div>
-            @elseif($testimony->video)
-                <!-- Full Video Card -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <div class="w-full aspect-video">
-                        <video controls class="w-full h-full" preload="metadata">
-                            <source src="{{ Storage::url($testimony->video) }}" type="video/mp4">
-                            <source src="{{ Storage::url($testimony->video) }}" type="video/webm">
-                            <source src="{{ Storage::url($testimony->video) }}" type="video/ogg">
-                            <div class="w-full h-full bg-gray-100 flex items-center justify-center">
-                                <p class="text-gray-500">Browser Anda tidak mendukung pemutar video</p>
-                            </div>
-                        </video>
-                    </div>
+            </div>
 
-                    <!-- Small overlay with name and actions -->
-                    <div class="p-4">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-gray-200">
-                                    <img src="{{ $testimony->image ? Storage::url($testimony->image) : 'https://via.placeholder.com/40' }}"
-                                        alt="{{ $testimony->name }}" class="w-full h-full object-cover">
-                                </div>
-                                <div>
-                                    <h3 class="font-semibold text-sm">{{ $testimony->name }}</h3>
-                                    @if ($testimony->caption)
-                                        <p class="text-gray-500 text-xs">{{ $testimony->caption }}</p>
-                                    @endif
-                                </div>
-                            </div>
+        @elseif ($isVideo)
+            <!-- Full Video Card -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="w-full aspect-video">
+                    <video controls class="w-full h-full" preload="metadata">
+                        <source src="{{ Storage::url($testimony->video) }}" type="video/mp4">
+                        <source src="{{ Storage::url($testimony->video) }}" type="video/webm">
+                        <source src="{{ Storage::url($testimony->video) }}" type="video/ogg">
+                        <div class="w-full h-full bg-gray-100 flex items-center justify-center">
+                            <p class="text-gray-500">Browser Anda tidak mendukung pemutar video</p>
+                        </div>
+                    </video>
+                </div>
 
-                            <!-- Action Buttons -->
-                            <div class="flex space-x-2">
-                                <button data-modal-target="edit-modal-{{ $testimony->id }}"
-                                    data-modal-toggle="edit-modal-{{ $testimony->id }}"
-                                    class="inline-flex items-center px-3 py-1 text-xs font-medium text-center text-white bg-blue-700 rounded hover:bg-blue-800 transition">
-                                    Edit
-                                </button>
-                                <a href="#" data-modal-target="delete-modal" data-modal-toggle="delete-modal"
-                                    data-id="{{ $testimony->id }}"
-                                    class="delete-btn px-3 py-1 text-xs font-medium text-white bg-red-700 rounded hover:bg-red-800 transition">
-                                    Hapus
-                                </a>
+                <!-- Small overlay with name and actions -->
+                <div class="p-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-gray-200">
+                                <img src="{{ Storage::url($testimony->image) ?? "https://placehold.co/40"}}"
+                                    alt="{{ $testimony->name }}" class="w-full h-full object-cover">
                             </div>
+                            <div>
+                                <h3 class="font-semibold text-sm">{{ $testimony->name }}</h3>
+                                @if ($testimony->caption)
+                                    <p class="text-gray-500 text-xs">{{ $testimony->caption }}</p>
+                                @endif
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex space-x-2">
+                            <button data-modal-target="edit-modal-{{ $testimony->id }}"
+                                data-modal-toggle="edit-modal-{{ $testimony->id }}"
+                                class="inline-flex items-center px-3 py-1 text-xs font-medium text-center text-white bg-blue-700 rounded hover:bg-blue-800 transition">
+                                Edit
+                            </button>
+                            <a href="#" data-modal-target="delete-modal" data-modal-toggle="delete-modal"
+                                data-id="{{ $testimony->id }}"
+                                class="delete-btn px-3 py-1 text-xs font-medium text-white bg-red-700 rounded hover:bg-red-800 transition">
+                                Hapus
+                            </a>
                         </div>
                     </div>
                 </div>
-            @else
-                <!-- Standard Text Card -->
-                <div class="bg-white p-6 rounded-lg shadow-md flex flex-col items-center text-center">
-                    <!-- Profile Image -->
-                    <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-gray-200 mb-4">
-                        <img src="{{ $testimony->image ? Storage::url($testimony->image) : 'https://via.placeholder.com/100' }}"
-                            alt="{{ $testimony->name }}" class="w-full h-full object-cover">
-                    </div>
+            </div>
 
-                    <h3 class="font-semibold">{{ $testimony->name }}</h3>
-                    @if ($testimony->caption)
-                        <p class="text-gray-500">{{ $testimony->caption }}</p>
-                    @endif
+        @elseif ($isImage)
+            <!-- Full Image Card -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="w-full aspect-video">
+                    <img src="{{ Storage::url($testimony->video) }}" 
+                         alt="{{ $testimony->name }}" class="w-full h-full object-contain">
+                </div>
 
-                    <div class="text-2xl text-gray-500 mb-4">
-                        <i class="fas fa-quote-left"></i>
-                    </div>
+                <!-- Small overlay with name and actions -->
+                <div class="p-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-gray-200">
+                                <img src="https://placehold.co/40"
+                                    alt="" class="w-full h-full object-cover">
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-sm">{{ $testimony->name }}</h3>
+                                @if ($testimony->caption)
+                                    <p class="text-gray-500 text-xs">{{ $testimony->caption }}</p>
+                                @endif
+                            </div>
+                        </div>
 
-                    <p class="text-gray-700 mb-4">
-                        {{ $testimony->description }}
-                    </p>
-
-                    <!-- Action Buttons -->
-                    <div class="flex mt-4 md:mt-6">
-                        <button data-modal-target="edit-modal-{{ $testimony->id }}"
-                            data-modal-toggle="edit-modal-{{ $testimony->id }}"
-                            class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 transition">
-                            Edit
-                        </button>
-                        <a href="#" data-modal-target="delete-modal" data-modal-toggle="delete-modal"
-                            data-id="{{ $testimony->id }}"
-                            class="delete-btn py-2 px-4 ms-2 text-sm font-medium text-white focus:outline-none bg-red-700 rounded-lg border border-gray-200 hover:bg-red-800 focus:z-10 focus:ring-4 focus:ring-gray-100 transition">
-                            Hapus
-                        </a>
+                        <!-- Action Buttons -->
+                        <div class="flex space-x-2">
+                            <button data-modal-target="edit-modal-{{ $testimony->id }}"
+                                data-modal-toggle="edit-modal-{{ $testimony->id }}"
+                                class="inline-flex items-center px-3 py-1 text-xs font-medium text-center text-white bg-blue-700 rounded hover:bg-blue-800 transition">
+                                Edit
+                            </button>
+                            <a href="#" data-modal-target="delete-modal" data-modal-toggle="delete-modal"
+                                data-id="{{ $testimony->id }}"
+                                class="delete-btn px-3 py-1 text-xs font-medium text-white bg-red-700 rounded hover:bg-red-800 transition">
+                                Hapus
+                            </a>
+                        </div>
                     </div>
                 </div>
-            @endif
-        @endforeach
-    </div>
+            </div>
+
+        @else
+            <!-- Standard Text Card -->
+            <div class="bg-white p-6 rounded-lg shadow-md flex flex-col items-center text-center">
+                <!-- Profile Image -->
+                <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-gray-200 mb-4">
+                    <img src="{{ $testimony->image ? Storage::url($testimony->image) : 'https://placehold.co/40' }}"
+                        alt="{{ $testimony->name }}" class="w-full h-full object-cover">
+                </div>
+
+                <h3 class="font-semibold">{{ $testimony->name }}</h3>
+                @if ($testimony->caption)
+                    <p class="text-gray-500">{{ $testimony->caption }}</p>
+                @endif
+
+                <div class="text-2xl text-gray-500 mb-4">
+                    <i class="fas fa-quote-left"></i>
+                </div>
+
+                <p class="text-gray-700 mb-4">
+                    {{ $testimony->description }}
+                </p>
+
+                <!-- Action Buttons -->
+                <div class="flex mt-4 md:mt-6">
+                    <button data-modal-target="edit-modal-{{ $testimony->id }}"
+                        data-modal-toggle="edit-modal-{{ $testimony->id }}"
+                        class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 transition">
+                        Edit
+                    </button>
+                    <a href="#" data-modal-target="delete-modal" data-modal-toggle="delete-modal"
+                        data-id="{{ $testimony->id }}"
+                        class="delete-btn py-2 px-4 ms-2 text-sm font-medium text-white focus:outline-none bg-red-700 rounded-lg border border-gray-200 hover:bg-red-800 focus:z-10 focus:ring-4 focus:ring-gray-100 transition">
+                        Hapus
+                    </a>
+                </div>
+            </div>
+        @endif
+    @endforeach
+</div>
     <!-- Edit Modals -->
     @foreach ($testimonials as $testimony)
         <div id="edit-modal-{{ $testimony->id }}" aria-hidden="true" data-modal-backdrop="static"
@@ -368,14 +416,13 @@
                                     <span class="text-gray-500 text-xs">Masukkan URL YouTube untuk video testimoni</span>
                                 </div>
 
-                                <!-- Video Upload Input -->
+                                <!-- Video/Photo Upload Input -->
                                 <div class="mb-4">
-                                    <label class="block mb-2 text-sm font-medium text-gray-900">Upload Video</label>
-                                    <input type="file" name="video" accept="video/mp4,video/webm,video/ogg"
+                                    <label class="block mb-2 text-sm font-medium text-gray-900">Upload Video/Foto</label>
+                                    <input type="file" name="video" accept="video/mp4,video/webm,video/ogg,image/*"
                                         class="transition block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
                                     <input type="hidden" name="old_video" value="{{ $testimony->video }}">
-                                    <span class="text-gray-500 text-xs">Format yang didukung: MP4, WebM, OGG (maksimal
-                                        50MB)</span>
+                                    <span class="text-gray-500 text-xs">Format yang didukung: MP4, WebM, OGG, JPG, PNG, JPEG, GIF (maksimal 50MB)</span>
                                 </div>
 
                                 <!-- Current Media Display -->
