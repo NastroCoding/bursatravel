@@ -33,7 +33,7 @@
                             <div class="md:w-2/3 p-6 flex flex-col justify-between">
                                 <div>
                                     <h3 class="text-2xl font-medium text-gray-800 mb-3">{{ $activity->title }}</h3>
-                                    <p class="text-gray-600 leading-relaxed mb-4">{{ $activity->description }}</p>
+                                    <p class="text-gray-600 leading-relaxed mb-4 text-justify">{{ $activity->description }}</p>
                                 </div>
                                 
                                 <div class="flex items-center justify-between">

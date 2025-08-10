@@ -284,74 +284,39 @@
                     @endif
                 @endforeach
             </div>
-            <div class="max-w-8xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
-                @foreach ($galleries->sortByDesc('created_at')->take(6) as $gallery)
-                    @php
-                        $is_video = false;
-                        $media = $gallery->media;
-                        $ext = strtolower(pathinfo($media, PATHINFO_EXTENSION));
-                        if (in_array($ext, ['mp4', 'webm', 'ogg'])) {
-                            $is_video = true;
-                        }
-                    @endphp
-                    <div class="gallery-item group cursor-pointer overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
-                        onclick="openGalleryModal({{ json_encode(Storage::url($gallery->media)) }}, {{ json_encode($gallery->description) }}, {{ json_encode($is_video ? $ext : '') }})">
-                        <div class="relative overflow-hidden">
-                            @if ($is_video)
-                                <video src="{{ Storage::url($gallery->media) }}" controls
-                                    class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110 bg-black"></video>
-                            @else
-                                <img src="{{ Storage::url($gallery->media) }}" alt="Masjid Al-Haram"
-                                    class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110" />
-                            @endif
-                            <div
-                                class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                <div class="absolute bottom-4 left-4 text-white">
-                                    <h3 class="text-lg font-semibold">{{ $gallery->description }}</h3>
-                                    <p class="text-sm opacity-90">
-                                        {{ \Carbon\Carbon::parse($gallery->date)->translatedFormat('d F Y') }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
         </div>
     </section>
 
-    <!-- Promotion Banner -->
     @if ($configs->img_info)
-        <section class="bg-gray-100 py-16">
-            <div class="container mx-auto px-4">
-                <div class="relative rounded-2xl overflow-hidden shadow-2xl">
-                    <!-- Banner Image -->
-                    <img src="{{ Storage::url($configs->img_info) }}" alt="Promotion Banner"
-                        class="w-full max-h-64 object-cover">
+    <section>
+        <div class="container mx-auto">
+            <div class="relative overflow-hidden shadow-2xl">
+                <!-- Banner Image -->
+                <img src="{{ Storage::url($configs->img_info) }}" alt="Promotion Banner"
+                    class="w-full max-h-64 object-cover">
 
-                    <!-- Overlay Gradient -->
-                    <div class="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent">
-                        <div class="absolute bottom-8 left-8 md:bottom-12 md:left-12 max-w-xl">
-                            @if ($configs->title_info)
-                                <h2 class="text-2xl md:text-4xl font-bold text-white mb-4">
-                                    {{ $configs->title_info }}
-                                </h2>
-                            @endif
-                            @if ($configs->info)
-                                <p class="text-white/90 text-sm md:text-base mb-6">
-                                    {{ $configs->info }}
-                                </p>
-                            @endif
-                            <a href="https://wa.me/+62{{ $configs->whatsapp_num }}"
-                                class="inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors duration-200">
-                                <i class="ri-whatsapp-line mr-2 text-lg"></i>
-                                Hubungi Kami
-                            </a>
-                        </div>
-                    </div>
+                <!-- Full Centered Dark Overlay -->
+                <div class="absolute inset-0 bg-black/60 flex flex-col items-center justify-center text-center px-4">
+                    @if ($configs->title_info)
+                        <h2 class="text-2xl md:text-4xl font-bold text-white mb-4">
+                            {{ $configs->title_info }}
+                        </h2>
+                    @endif
+                    @if ($configs->info)
+                        <p class="text-white/90 text-sm md:text-base mb-6">
+                            {{ $configs->info }}
+                        </p>
+                    @endif
+                    <a href="https://wa.me/+62{{ $configs->whatsapp_num }}"
+                        class="inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors duration-200">
+                        <i class="ri-whatsapp-line mr-2 text-lg"></i>
+                        Hubungi Kami
+                    </a>
                 </div>
             </div>
-        </section>
-    @endif
+        </div>
+    </section>
+@endif
 
     @if ($items->isNotEmpty())
         <!-- Item Showcase -->
@@ -973,8 +938,38 @@
                     Ayo bangun memori bersama Bursa Umroh Haji Indonesia!
                 </p>
             </div>
-
-
+            <div class="max-w-8xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+                @foreach ($galleries->sortByDesc('created_at')->take(6) as $gallery)
+                    @php
+                        $is_video = false;
+                        $media = $gallery->media;
+                        $ext = strtolower(pathinfo($media, PATHINFO_EXTENSION));
+                        if (in_array($ext, ['mp4', 'webm', 'ogg'])) {
+                            $is_video = true;
+                        }
+                    @endphp
+                    <div class="gallery-item group cursor-pointer overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
+                        onclick="openGalleryModal({{ json_encode(Storage::url($gallery->media)) }}, {{ json_encode($gallery->description) }}, {{ json_encode($is_video ? $ext : '') }})">
+                        <div class="relative overflow-hidden">
+                            @if ($is_video)
+                                <video src="{{ Storage::url($gallery->media) }}" controls
+                                    class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110 bg-black"></video>
+                            @else
+                                <img src="{{ Storage::url($gallery->media) }}" alt="Masjid Al-Haram"
+                                    class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110" />
+                            @endif
+                            <div
+                                class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <div class="absolute bottom-4 left-4 text-white">
+                                    <h3 class="text-lg font-semibold">{{ $gallery->description }}</h3>
+                                    <p class="text-sm opacity-90">
+                                        {{ \Carbon\Carbon::parse($gallery->date)->translatedFormat('d F Y') }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
         </div>
     </section>
 
@@ -1044,6 +1039,39 @@
             </div>
         </div>
     </section>
+
+    @if ($configs->img_info2)
+    <section>
+        <div class="container mx-auto">
+            <div class="relative overflow-hidden shadow-2xl">
+                <!-- Banner Image -->
+                <img src="{{ Storage::url($configs->img_info2) }}" alt="Promotion Banner"
+                    class="w-full max-h-64 object-cover">
+
+                <!-- Full Centered Dark Overlay -->
+                <div class="absolute inset-0 bg-black/60 flex flex-col items-center justify-center text-center px-4">
+                    @if ($configs->title_info2)
+                        <h2 class="text-2xl md:text-4xl font-bold text-white mb-4">
+                            {{ $configs->title_info2 }}
+                        </h2>
+                    @endif
+                    @if ($configs->info2)
+                        <p class="text-white/90 text-sm md:text-base mb-6">
+                            {{ $configs->info2 }}
+                        </p>
+                    @endif
+                    <a href="https://wa.me/+62{{ $configs->whatsapp_num }}"
+                        class="inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors duration-200">
+                        <i class="ri-whatsapp-line mr-2 text-lg"></i>
+                        Hubungi Kami
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+@endif
+
+
 
     <script>
         function openGalleryModal(mediaUrl, caption, type) {
