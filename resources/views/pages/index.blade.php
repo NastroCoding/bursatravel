@@ -1,25 +1,127 @@
 @extends('layouts.main')
 
 @section('content')
-    <header id="home">
-        <div class="header__container">
-            <div class="header__content">
-                <p>Umroh Mudah, Nyaman Ibadah</p>
-                <h1><span class="grad">BURSA &nbsp;</span> Umroh Haji <span class="text-red-500">Indo</span><span
-                        class="text-white">nesia</span></h1>
-                <div class="header__btns">
-                    <button class="btn" type="submit" data-modal-target="contact-modal-display"
-                        data-modal-toggle="contact-modal-display">Pesan Kursi Sekarang!</button>
-                    <a href="#">
-                        <span><i class="ri-whatsapp-line"></i></span>
+    <header id="home"
+    class="relative min-h-screen bg-gradient-to-br from-green-800 via-green-700 to-green-800 overflow-hidden">
+    <!-- Background Image with Overlay -->
+    <div class="absolute inset-0 bg-cover bg-center bg-no-repeat blur-sm"
+        style="background-image: url('{{asset('img/background.JPG')}}');">
+        <div class="absolute inset-0 bg-black/50"></div>
+    </div>
+
+    <!-- Islamic Pattern Overlay -->
+    <div class="absolute inset-0 islamic-pattern opacity-5"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-screen flex items-center">
+        <div class="grid lg:grid-cols-2 gap-12 items-center w-full">
+
+            <!-- Content Section -->
+            <div class="text-white space-y-8 lg:pr-8">
+                <!-- Subtitle -->
+                <div
+                    class="inline-flex items-center bg-yellow-500/10 backdrop-blur-sm border border-yellow-500/20 rounded-full px-6 py-3">
+                    <i class="ri-star-line text-yellow-400 mr-2"></i>
+                    <p class="text-yellow-400 font-medium text-lg">Umroh Mudah, Nyaman Ibadah</p>
+                </div>
+
+                <!-- Main Title -->
+                <div class="space-y-4">
+                    <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
+                        <span
+                            class="grad">
+                            BURSA
+                        </span>
+                        <br>
+                        <span class="text-white font-grad">Umroh Haji</span>
+                        <br>
+                        <span class="text-red-400 font-grad">Indo</span><span class="text-white font-grad">nesia</span>
+                    </h1>
+
+                    <!-- Description -->
+                    <p class="text-lg text-gray-200 max-w-lg leading-relaxed">
+                        Wujudkan impian suci Anda bersama kami. Perjalanan ibadah yang berkah, aman, dan penuh makna
+                        menanti Anda.
+                    </p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-6">
+                    <!-- Primary CTA -->
+                    <button
+                        class="group bg-yellow-400 hover:bg-yellow-500 text-gray-900 px-8 py-4 rounded-full font-bold text-lg shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center space-x-3"
+                        type="submit" data-modal-target="contact-modal-display"
+                        data-modal-toggle="contact-modal-display">
+                        <i class="ri-flight-takeoff-line group-hover:animate-bounce"></i>
+                        <span>Pesan Kursi Sekarang!</span>
+                    </button>
+
+                    <!-- WhatsApp Button -->
+                    <a href="#"
+                        class="group bg-green-500/10 backdrop-blur-sm border border-green-500/30 hover:bg-green-500 text-green-400 hover:text-white px-6 py-4 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 flex items-center space-x-3">
+                        <i class="ri-whatsapp-line text-2xl group-hover:animate-bounce"></i>
+                        <span class="hidden sm:inline">Chat WhatsApp</span>
                     </a>
                 </div>
+
+                <!-- Trust Indicators -->
+                <div class="pt-8 border-t border-white/10">
+                    <div class="grid grid-cols-3 gap-4 text-center">
+                        <div class="text-white">
+                            <div class="text-2xl font-bold text-yellow-400">1000+</div>
+                            <div class="text-sm text-gray-300">Jamaah Puas</div>
+                        </div>
+                        <div class="text-white">
+                            <div class="text-2xl font-bold text-yellow-400">15+</div>
+                            <div class="text-sm text-gray-300">Tahun Pengalaman</div>
+                        </div>
+                        <div class="text-white">
+                            <div class="text-2xl font-bold text-yellow-400">99%</div>
+                            <div class="text-sm text-gray-300">Rating Kepuasan</div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="header__image">
-                <img src="img/bus.png" alt="header" />
+
+            <!-- Image Section - Kaaba Logo -->
+            <div class="relative flex justify-center lg:justify-end">
+                <div class="relative">
+                    <!-- Glowing Background Circle -->
+                    <div
+                        class="absolute inset-0 bg-yellow-400/10 rounded-full blur-3xl transform scale-150">
+                    </div>
+
+                    <!-- Logo Container -->
+                    <div
+                        class="relative bg-white/5 backdrop-blur-md border border-yellow-400/20 rounded-full p-8 shadow-2xl">
+                        <div class="w-80 h-80 lg:w-96 lg:h-96 flex items-center justify-center">
+                            <img src="img/kaaba-logo.png" alt="Kaaba - Holy Mosque"
+                                class="w-full h-full object-contain filter drop-shadow-lg" />
+                        </div>
+                    </div>
+
+                    <!-- Decorative Elements -->
+                    <div
+                        class="absolute -top-4 -right-4 bg-yellow-400 text-gray-900 w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl">
+                        ☪
+                    </div>
+                    <div class="absolute -bottom-4 -left-4 bg-green-500 text-white w-10 h-10 rounded-full flex items-center justify-center text-lg"
+                        style="animation-delay: -1s;">
+                        ✦
+                    </div>
+                </div>
             </div>
         </div>
-    </header>
+    </div>
+
+    <!-- Scroll Down Indicator -->
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white/60 animate-bounce">
+        <div class="flex flex-col items-center space-y-2">
+            <span class="text-sm">Scroll Down</span>
+            <i class="ri-arrow-down-line text-xl"></i>
+        </div>
+    </div>
+</header>
+
 
     <!-- Contact modal -->
     <div id="contact-modal-display" aria-hidden="true" data-modal-backdrop="static"
@@ -82,248 +184,228 @@
     </div>
 
     <!-- Image Carousel -->
-    <section class="py-16 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Moment Kebersamaan Kami</h2>
-                <p class="text-gray-600 max-w-2xl mx-auto">Ayo bangun moment kebersamaan umroh bersama kami, berikut ada
-                    testimoni jama'ah.</p>
-            </div>
+    <section class="py-16 bg-green-50">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-grad font-bold text-gray-800 mb-4">Moment Kebersamaan Kami</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">
+                Ayo bangun moment kebersamaan umroh bersama kami, berikut ada testimoni jama'ah.
+            </p>
+        </div>
 
-            <div class="relative max-w-8xl mx-auto">
-                <!-- Carousel Container -->
-                <div id="carousel" class="relative overflow-hidden rounded-2xl shadow-2xl">
-                    <div id="carousel-inner" class="flex transition-transform duration-500 ease-in-out">
-                        @foreach ($slideshows as $index => $slide)
-                            <div class="carousel-slide min-w-full relative">
-                                <img src="{{ Storage::url($slide->image) }}" alt="{{ $slide->title }}"
-                                    class="w-full h-96 md:h-[500px] object-cover" />
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent">
-                                </div>
-                                <div class="absolute bottom-8 left-8 text-white">
-                                    <h3 class="text-2xl md:text-3xl font-bold mb-2">{{ $slide->title }}</h3>
-                                    <p class="text-lg opacity-90">{{ $slide->description }}</p>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-
-                <!-- Navigation Arrows -->
-                <button id="prevBtn"
-                    class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white p-3 rounded-full transition duration-300 z-10">
-                    <i class="ri-arrow-left-s-line text-2xl"></i>
-                </button>
-                <button id="nextBtn"
-                    class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white p-3 rounded-full transition duration-300 z-10">
-                    <i class="ri-arrow-right-s-line text-2xl"></i>
-                </button>
-
-                <!-- Indicators -->
-                <div class="flex justify-center mt-6 space-x-2">
+        <div class="relative max-w-8xl mx-auto">
+            <!-- Carousel Container -->
+            <div id="carousel" class="relative overflow-hidden rounded-2xl shadow-lg">
+                <div id="carousel-inner" class="flex transition-transform duration-500 ease-in-out">
                     @foreach ($slideshows as $index => $slide)
-                        <button class="indicator w-3 h-3 rounded-full bg-gray-400 hover:bg-gray-600 transition duration-300"
-                            data-slide="{{ $index }}"></button>
+                        <div class="carousel-slide min-w-full relative">
+                            <img src="{{ Storage::url($slide->image) }}" alt="{{ $slide->title }}"
+                                class="w-full h-96 md:h-[500px] object-cover" />
+                            <div
+                                class="absolute inset-0 bg-gradient-to-t from-green-900/70 via-transparent to-transparent">
+                            </div>
+                            <div class="absolute bottom-8 left-8 text-white">
+                                <h3 class="text-2xl md:text-3xl font-bold mb-2 text-yellow-300">{{ $slide->title }}</h3>
+                                <p class="text-lg opacity-90">{{ $slide->description }}</p>
+                            </div>
+                        </div>
                     @endforeach
                 </div>
             </div>
 
-            <!-- Testimonials Grid Display -->
-            <div class="max-w-8xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
-                @foreach ($testimonials->sortByDesc('created_at') as $testimony)
-                    @php
-                        // Optimized YouTube ID extraction (supports youtube.com, youtu.be, youtube shorts)
-                        $youtube_id = null;
-                        if ($testimony->youtube_url) {
-                            if (
-                                preg_match(
-                                    '/(?:youtube\.com\/(?:shorts\/|watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/',
-                                    $testimony->youtube_url,
-                                    $matches,
-                                )
-                            ) {
-                                $youtube_id = $matches[1];
-                            } elseif (preg_match('/^([a-zA-Z0-9_-]{11})$/', $testimony->youtube_url)) {
-                                $youtube_id = $testimony->youtube_url;
-                            }
-                        }
+            <!-- Navigation Arrows -->
+            <button id="prevBtn"
+                class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-green-800/50 backdrop-blur-sm hover:bg-green-700/70 text-white p-3 rounded-full transition duration-300 z-10">
+                <i class="ri-arrow-left-s-line text-2xl"></i>
+            </button>
+            <button id="nextBtn"
+                class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-green-800/50 backdrop-blur-sm hover:bg-green-700/70 text-white p-3 rounded-full transition duration-300 z-10">
+                <i class="ri-arrow-right-s-line text-2xl"></i>
+            </button>
 
-                        // Detect if $testimony->video is actually an image or video
-                        $filePath = $testimony->video;
-                        $extension = $filePath ? strtolower(pathinfo($filePath, PATHINFO_EXTENSION)) : null;
-                        $is_short = false;
-                        if ($testimony->youtube_url && strpos($testimony->youtube_url, 'shorts') !== false) {
-                            $is_short = true;
-                        }
-                        $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
-                        $isVideo = in_array($extension, ['mp4', 'webm', 'ogg']);
-                    @endphp
-
-                    @if ($youtube_id)
-                        <!-- Full YouTube Embed Card -->
-                        <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                            <div class="w-full flex justify-center items-center" style="background: #000;">
-                                @if ($is_short)
-                                    <iframe class="w-[320px] h-[568px] md:w-[360px] md:h-[640px]"
-                                        src="https://www.youtube.com/embed/{{ $youtube_id }}?rel=0&modestbranding=1"
-                                        title="YouTube Shorts player" frameborder="0"
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
-                                        style="aspect-ratio: 9/16; background: #000;">
-                                    </iframe>
-                                @else
-                                    <iframe class="w-full h-full aspect-video"
-                                        src="https://www.youtube.com/embed/{{ $youtube_id }}?rel=0&modestbranding=1"
-                                        title="YouTube video player" frameborder="0"
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
-                                    </iframe>
-                                @endif
-                            </div>
-
-                            <!-- Small overlay with name and actions -->
-                            <div class="p-4">
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center space-x-3">
-                                        <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-gray-200">
-                                            @if ($testimony->image)
-                                                <img src="{{ Storage::url($testimony->image) ?? 'https://placehold.co/40' }}"
-                                                    alt="{{ $testimony->name }}" class="w-full h-full object-cover">
-                                            @endif
-                                        </div>
-                                        <div>
-                                            <h3 class="font-semibold text-sm">{{ $testimony->name }}</h3>
-                                            @if ($testimony->caption)
-                                                <p class="text-gray-500 text-xs">{{ $testimony->caption }}</p>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @elseif ($isVideo)
-                        <!-- Full Video Card -->
-                        <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                            <div class="w-full aspect-video">
-                                <video controls class="w-[320px] h-[568px] md:w-[360px] md:h-[640px]" preload="metadata">
-                                    <source src="{{ Storage::url($testimony->video) }}" type="video/mp4">
-                                    <source src="{{ Storage::url($testimony->video) }}" type="video/webm">
-                                    <source src="{{ Storage::url($testimony->video) }}" type="video/ogg">
-                                    <div class="w-full h-full bg-gray-100 flex items-center justify-center">
-                                        <p class="text-gray-500">Browser Anda tidak mendukung pemutar video</p>
-                                    </div>
-                                </video>
-                            </div>
-
-                            <!-- Small overlay with name and actions -->
-                            <div class="p-4">
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center space-x-3">
-                                        <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-gray-200">
-                                            <img src="{{ Storage::url($testimony->image) ?? 'https://placehold.co/40' }}"
-                                                alt="{{ $testimony->name }}" class="w-full h-full object-cover">
-                                        </div>
-                                        <div>
-                                            <h3 class="font-semibold text-sm">{{ $testimony->name }}</h3>
-                                            @if ($testimony->caption)
-                                                <p class="text-gray-500 text-xs">{{ $testimony->caption }}</p>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @elseif ($isImage)
-                        <!-- Full Image Card -->
-                        <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                            <div class="w-full aspect-video">
-                                <img src="{{ Storage::url($testimony->video) }}" alt="{{ $testimony->name }}"
-                                    class="w-[320px] h-[568px] md:w-[360px] md:h-[640px] mx-auto object-contain">
-                            </div>
-
-                            <!-- Small overlay with name and actions -->
-                            <div class="p-4">
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center space-x-3">
-                                        <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-gray-200">
-                                            <img src="https://placehold.co/40" alt=""
-                                                class="w-full h-full object-cover">
-                                        </div>
-                                        <div>
-                                            <h3 class="font-semibold text-sm">{{ $testimony->name }}</h3>
-                                            @if ($testimony->caption)
-                                                <p class="text-gray-500 text-xs">{{ $testimony->caption }}</p>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @else
-                        <!-- Standard Text Card -->
-                        <div class="bg-white p-6 rounded-lg shadow-md flex flex-col items-center text-center">
-                            <!-- Profile Image -->
-                            <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-gray-200 mb-4">
-                                <img src="{{ $testimony->image ? Storage::url($testimony->image) : 'https://placehold.co/40' }}"
-                                    alt="{{ $testimony->name }}" class="w-full h-full object-cover">
-                            </div>
-
-                            <h3 class="font-semibold">{{ $testimony->name }}</h3>
-                            @if ($testimony->caption)
-                                <p class="text-gray-500">{{ $testimony->caption }}</p>
-                            @endif
-
-                            <div class="text-2xl text-gray-500 mb-4">
-                                <i class="fas fa-quote-left"></i>
-                            </div>
-
-                            <p class="text-gray-700 mb-4">
-                                {{ $testimony->description }}
-                            </p>
-                        </div>
-                    @endif
+            <!-- Indicators -->
+            <div class="flex justify-center mt-6 space-x-2">
+                @foreach ($slideshows as $index => $slide)
+                    <button
+                        class="indicator w-3 h-3 rounded-full bg-green-300 hover:bg-green-500 transition duration-300"
+                        data-slide="{{ $index }}"></button>
                 @endforeach
             </div>
         </div>
-    </section>
+
+        <!-- Testimonials Grid Display -->
+        <div class="max-w-8xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+            @foreach ($testimonials->sortByDesc('created_at') as $testimony)
+                @php
+                    // Optimized YouTube ID extraction
+                    $youtube_id = null;
+                    if ($testimony->youtube_url) {
+                        if (
+                            preg_match(
+                                '/(?:youtube\.com\/(?:shorts\/|watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/',
+                                $testimony->youtube_url,
+                                $matches,
+                            )
+                        ) {
+                            $youtube_id = $matches[1];
+                        } elseif (preg_match('/^([a-zA-Z0-9_-]{11})$/', $testimony->youtube_url)) {
+                            $youtube_id = $testimony->youtube_url;
+                        }
+                    }
+
+                    $filePath = $testimony->video;
+                    $extension = $filePath ? strtolower(pathinfo($filePath, PATHINFO_EXTENSION)) : null;
+                    $is_short = $testimony->youtube_url && strpos($testimony->youtube_url, 'shorts') !== false;
+                    $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
+                    $isVideo = in_array($extension, ['mp4', 'webm', 'ogg']);
+                @endphp
+
+                @if ($youtube_id)
+                    <!-- YouTube Card -->
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden border border-green-100">
+                        <div class="w-full flex justify-center items-center" style="background: #000;">
+                            @if ($is_short)
+                                <iframe class="w-[320px] h-[568px] md:w-[360px] md:h-[640px]"
+                                    src="https://www.youtube.com/embed/{{ $youtube_id }}?rel=0&modestbranding=1"
+                                    title="YouTube Shorts player" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+                                </iframe>
+                            @else
+                                <iframe class="w-full h-full aspect-video"
+                                    src="https://www.youtube.com/embed/{{ $youtube_id }}?rel=0&modestbranding=1"
+                                    title="YouTube video player" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+                                </iframe>
+                            @endif
+                        </div>
+                        <div class="p-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-green-200">
+                                    @if ($testimony->image)
+                                        <img src="{{ Storage::url($testimony->image) ?? 'https://placehold.co/40' }}"
+                                            alt="{{ $testimony->name }}" class="w-full h-full object-cover">
+                                    @endif
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-sm text-green-800">{{ $testimony->name }}</h3>
+                                    @if ($testimony->caption)
+                                        <p class="text-gray-500 text-xs">{{ $testimony->caption }}</p>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @elseif ($isVideo)
+                    <!-- Video Card -->
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden border border-green-100">
+                        <div class="w-full aspect-video">
+                            <video controls class="w-[320px] h-[568px] md:w-[360px] md:h-[640px]" preload="metadata">
+                                <source src="{{ Storage::url($testimony->video) }}" type="video/mp4">
+                                <source src="{{ Storage::url($testimony->video) }}" type="video/webm">
+                                <source src="{{ Storage::url($testimony->video) }}" type="video/ogg">
+                            </video>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-green-200">
+                                    <img src="{{ Storage::url($testimony->image) ?? 'https://placehold.co/40' }}"
+                                        alt="{{ $testimony->name }}" class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-sm text-green-800">{{ $testimony->name }}</h3>
+                                    @if ($testimony->caption)
+                                        <p class="text-gray-500 text-xs">{{ $testimony->caption }}</p>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @elseif ($isImage)
+                    <!-- Image Card -->
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden border border-green-100">
+                        <div class="w-full aspect-video">
+                            <img src="{{ Storage::url($testimony->video) }}" alt="{{ $testimony->name }}"
+                                class="w-[320px] h-[568px] md:w-[360px] md:h-[640px] mx-auto object-contain">
+                        </div>
+                        <div class="p-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-green-200">
+                                    <img src="https://placehold.co/40" alt=""
+                                        class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-sm text-green-800">{{ $testimony->name }}</h3>
+                                    @if ($testimony->caption)
+                                        <p class="text-gray-500 text-xs">{{ $testimony->caption }}</p>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @else
+                    <!-- Text Card -->
+                    <div class="bg-white p-6 rounded-lg shadow-lg border border-green-100 flex flex-col items-center text-center">
+                        <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-green-200 mb-4">
+                            <img src="{{ $testimony->image ? Storage::url($testimony->image) : 'https://placehold.co/40' }}"
+                                alt="{{ $testimony->name }}" class="w-full h-full object-cover">
+                        </div>
+                        <h3 class="font-semibold text-green-800">{{ $testimony->name }}</h3>
+                        @if ($testimony->caption)
+                            <p class="text-gray-500">{{ $testimony->caption }}</p>
+                        @endif
+                        <div class="text-2xl text-green-400 mb-4">
+                            <i class="fas fa-quote-left"></i>
+                        </div>
+                        <p class="text-gray-700 mb-4">
+                            {{ $testimony->description }}
+                        </p>
+                    </div>
+                @endif
+            @endforeach
+        </div>
+    </div>
+</section>
+
 
     @if ($configs->img_info)
-    <section>
-        <div class="container mx-auto">
-            <div class="relative overflow-hidden shadow-2xl">
-                <!-- Banner Image -->
-                <img src="{{ Storage::url($configs->img_info) }}" alt="Promotion Banner"
-                    class="w-full max-h-64 object-cover">
+        <section>
+            <div class="container mx-auto">
+                <div class="relative overflow-hidden shadow-2xl">
+                    <!-- Banner Image -->
+                    <img src="{{ Storage::url($configs->img_info) }}" alt="Promotion Banner"
+                        class="w-full max-h-64 object-cover">
 
-                <!-- Full Centered Dark Overlay -->
-                <div class="absolute inset-0 bg-black/60 flex flex-col items-center justify-center text-center px-4">
-                    @if ($configs->title_info)
-                        <h2 class="text-2xl md:text-4xl font-bold text-white mb-4">
-                            {{ $configs->title_info }}
-                        </h2>
-                    @endif
-                    @if ($configs->info)
-                        <p class="text-white/90 text-sm md:text-base mb-6">
-                            {{ $configs->info }}
-                        </p>
-                    @endif
-                    <a href="https://wa.me/+62{{ $configs->whatsapp_num }}"
-                        class="inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors duration-200">
-                        <i class="ri-whatsapp-line mr-2 text-lg"></i>
-                        Hubungi Kami
-                    </a>
+                    <!-- Full Centered Dark Overlay -->
+                    <div class="absolute inset-0 bg-black/60 flex flex-col items-center justify-center text-center px-4">
+                        @if ($configs->title_info)
+                            <h2 class="text-2xl md:text-4xl font-bold text-white mb-4">
+                                {{ $configs->title_info }}
+                            </h2>
+                        @endif
+                        @if ($configs->info)
+                            <p class="text-white/90 text-sm md:text-base mb-6">
+                                {{ $configs->info }}
+                            </p>
+                        @endif
+                        <a href="https://wa.me/+62{{ $configs->whatsapp_num }}"
+                            class="inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors duration-200">
+                            <i class="ri-whatsapp-line mr-2 text-lg"></i>
+                            Hubungi Kami
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
-@endif
+        </section>
+    @endif
 
     @if ($items->isNotEmpty())
         <!-- Item Showcase -->
         <section class="py-16 bg-white">
             <div class="container mx-auto px-4">
                 <div class="text-center mb-12">
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                    <h2 class="text-3xl md:text-4xl font-grad font-bold text-gray-900 mb-4">
                         Perlengkapan Umroh & Haji
                     </h2>
                     <p class="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -343,11 +425,11 @@
         </section>
     @endif
 
-    <section class="py-16 bg-gray-50" id="activities">
+    <section class="py-16 bg-white/95" id="activities">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Section Header -->
             <div class="text-center mb-12">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                <h2 class="text-3xl md:text-4xl font-grad font-bold text-gray-900 mb-4">
                     Kegiatan Bursa
                 </h2>
                 <p class="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -933,7 +1015,7 @@
     <section class="py-16 bg-gray-50">
         <div class="container mx-auto px-4">
             <div class="text-center mb-12">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Memori Kebersamaan Kami</h2>
+                <h2 class="text-3xl md:text-4xl font-grad font-bold text-gray-800 mb-4">Memori Kebersamaan Kami</h2>
                 <p class="text-gray-600 max-w-2xl mx-auto">
                     Ayo bangun memori bersama Bursa Umroh Haji Indonesia!
                 </p>
@@ -1041,35 +1123,35 @@
     </section>
 
     @if ($configs->img_info2)
-    <section>
-        <div class="container mx-auto">
-            <div class="relative overflow-hidden shadow-2xl">
-                <!-- Banner Image -->
-                <img src="{{ Storage::url($configs->img_info2) }}" alt="Promotion Banner"
-                    class="w-full max-h-64 object-cover">
+        <section>
+            <div class="container mx-auto">
+                <div class="relative overflow-hidden shadow-2xl">
+                    <!-- Banner Image -->
+                    <img src="{{ Storage::url($configs->img_info2) }}" alt="Promotion Banner"
+                        class="w-full max-h-64 object-cover">
 
-                <!-- Full Centered Dark Overlay -->
-                <div class="absolute inset-0 bg-black/60 flex flex-col items-center justify-center text-center px-4">
-                    @if ($configs->title_info2)
-                        <h2 class="text-2xl md:text-4xl font-bold text-white mb-4">
-                            {{ $configs->title_info2 }}
-                        </h2>
-                    @endif
-                    @if ($configs->info2)
-                        <p class="text-white/90 text-sm md:text-base mb-6">
-                            {{ $configs->info2 }}
-                        </p>
-                    @endif
-                    <a href="https://wa.me/+62{{ $configs->whatsapp_num }}"
-                        class="inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors duration-200">
-                        <i class="ri-whatsapp-line mr-2 text-lg"></i>
-                        Hubungi Kami
-                    </a>
+                    <!-- Full Centered Dark Overlay -->
+                    <div class="absolute inset-0 bg-black/60 flex flex-col items-center justify-center text-center px-4">
+                        @if ($configs->title_info2)
+                            <h2 class="text-2xl md:text-4xl font-bold text-white mb-4">
+                                {{ $configs->title_info2 }}
+                            </h2>
+                        @endif
+                        @if ($configs->info2)
+                            <p class="text-white/90 text-sm md:text-base mb-6">
+                                {{ $configs->info2 }}
+                            </p>
+                        @endif
+                        <a href="https://wa.me/+62{{ $configs->whatsapp_num }}"
+                            class="inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors duration-200">
+                            <i class="ri-whatsapp-line mr-2 text-lg"></i>
+                            Hubungi Kami
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
-@endif
+        </section>
+    @endif
 
 
 
