@@ -13,7 +13,8 @@
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between text-sm text-gray-500 mb-6">
                     <div class="flex items-center mb-2 sm:mb-0">
                         <i class="fas fa-user-circle text-blue-600 mr-2"></i>
-                        <span>Ditulis oleh: <strong class="text-gray-700">{{ $activities->trademark ?? 'Admin' }}</strong></span>
+                        <span>Ditulis oleh: <strong
+                                class="text-gray-700">{{ $activities->trademark ?? 'Admin' }}</strong></span>
                     </div>
                     <div class="flex items-center">
                         <i class="fas fa-calendar text-blue-600 mr-2"></i>
@@ -44,10 +45,10 @@
                             @foreach ($images as $image)
                                 @if ($image)
                                     <img class="w-full max-w-2xl mx-auto rounded-lg shadow-sm border border-gray-100"
-                                         src="{{ asset('storage/' . $image) }}" 
-                                         alt="{{ $activities->title }}">
+                                        src="{{ asset('storage/' . $image) }}" alt="{{ $activities->title }}">
                                 @else
-                                    <div class="w-full max-w-2xl mx-auto h-64 bg-gray-100 rounded-lg flex items-center justify-center">
+                                    <div
+                                        class="w-full max-w-2xl mx-auto h-64 bg-gray-100 rounded-lg flex items-center justify-center">
                                         <span class="text-gray-400">No Image Available</span>
                                     </div>
                                 @endif
@@ -59,8 +60,7 @@
                             @foreach ($images as $image)
                                 @if ($image)
                                     <img class="w-full h-64 object-cover rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-300"
-                                         src="{{ asset('storage/' . $image) }}" 
-                                         alt="{{ $activities->title }}">
+                                        src="{{ asset('storage/' . $image) }}" alt="{{ $activities->title }}">
                                 @else
                                     <div class="w-full h-64 bg-gray-100 rounded-lg flex items-center justify-center">
                                         <span class="text-gray-400 text-sm">No Image</span>
@@ -75,13 +75,13 @@
             <!-- Activity Content: Semua Topic -->
             <div class="mb-12">
                 <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-8">
-                    @if($activities->activityTopics && $activities->activityTopics->count())
-                        @foreach($activities->activityTopics as $topic)
+                    @if ($activities->activityTopics && $activities->activityTopics->count())
+                        @foreach ($activities->activityTopics as $topic)
                             <div class="mb-8">
                                 <h2 class="text-2xl font-medium text-gray-800 mb-3">
                                     {{ $topic->title }}
                                 </h2>
-                                @if($topic->subtitle)
+                                @if ($topic->subtitle)
                                     <p class="text-gray-500 text-sm mb-4 italic">
                                         {{ $topic->subtitle }}
                                     </p>
@@ -99,7 +99,8 @@
 
             <!-- Navigation/Actions -->
             <div class="flex justify-center mb-12">
-                <a href="/" class="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300">
+                <a href="/"
+                    class="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300">
                     <i class="fas fa-arrow-left mr-2"></i>
                     Kembali ke Beranda
                 </a>
@@ -123,21 +124,21 @@
                         @php
                             $activityImages = json_decode($activity->image, true);
                         @endphp
-                        <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300">
+                        <div
+                            class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300">
                             <div class="md:flex">
                                 <!-- Image -->
                                 <div class="md:w-1/2">
                                     @if (is_array($activityImages) && !empty($activityImages))
                                         <img src="{{ asset('storage/' . $activityImages[0]) }}"
-                                             class="w-full h-48 md:h-full object-cover" 
-                                             alt="{{ $activity->title }}">
+                                            class="w-full h-48 md:h-full object-cover" alt="{{ $activity->title }}">
                                     @else
                                         <div class="w-full h-48 md:h-full bg-gray-100 flex items-center justify-center">
                                             <span class="text-gray-400 text-sm">No Image</span>
                                         </div>
                                     @endif
                                 </div>
-                                
+
                                 <!-- Content -->
                                 <div class="md:w-1/2 p-6 flex flex-col justify-between">
                                     <div>
@@ -148,7 +149,7 @@
                                             {{ $activity->description }}
                                         </p>
                                     </div>
-                                    
+
                                     <div class="flex items-center justify-between">
                                         <div class="text-xs text-gray-500">
                                             <p class="mb-1">{{ $activity->trademark }}</p>
@@ -158,10 +159,12 @@
                                             <p>{{ \Carbon\Carbon::parse($activity->date)->translatedFormat('d M Y') }}</p>
                                         </div>
                                         <a href="/activity/{{ $activity->slug }}"
-                                           class="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors">
+                                            class="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors">
                                             Baca
-                                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 5l7 7-7 7"></path>
                                             </svg>
                                         </a>
                                     </div>
@@ -174,7 +177,8 @@
 
             <!-- View All Activities Button -->
             <div class="text-center mt-12">
-                <a href="/#aktifitas" class="inline-flex items-center px-6 py-3 bg-white text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors duration-300">
+                <a href="/#aktifitas"
+                    class="inline-flex items-center px-6 py-3 bg-white text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors duration-300">
                     Lihat Semua Aktivitas
                     <i class="fas fa-arrow-right ml-2"></i>
                 </a>
@@ -184,13 +188,55 @@
 
     <!-- Custom Styles for Text Truncation -->
     <style>
+        .prose h1 {
+            font-size: 2.25rem;
+            /* text-4xl */
+            line-height: 2.5rem;
+            font-weight: 600;
+        }
+
+        .prose h2 {
+            font-size: 1.875rem;
+            /* text-3xl */
+            line-height: 2.25rem;
+            font-weight: 600;
+        }
+
+        .prose h3 {
+            font-size: 1.5rem;
+            /* text-2xl */
+            line-height: 2rem;
+            font-weight: 500;
+        }
+
+        .prose h4 {
+            font-size: 1.25rem;
+            /* text-xl */
+            line-height: 1.75rem;
+            font-weight: 500;
+        }
+
+        .prose h5 {
+            font-size: 1.125rem;
+            /* text-lg */
+            line-height: 1.5rem;
+            font-weight: 500;
+        }
+
+        .prose h6 {
+            font-size: 1rem;
+            /* text-base */
+            line-height: 1.5rem;
+            font-weight: 500;
+        }
+
         .line-clamp-2 {
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
-        
+
         .line-clamp-3 {
             display: -webkit-box;
             -webkit-line-clamp: 3;
@@ -198,7 +244,12 @@
             overflow: hidden;
         }
 
-        .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+        .prose h1,
+        .prose h2,
+        .prose h3,
+        .prose h4,
+        .prose h5,
+        .prose h6 {
             color: #374151;
             font-weight: 500;
         }
@@ -207,7 +258,8 @@
             margin-bottom: 1rem;
         }
 
-        .prose ul, .prose ol {
+        .prose ul,
+        .prose ol {
             margin: 1rem 0;
             padding-left: 1.5rem;
         }
