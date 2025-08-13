@@ -125,7 +125,7 @@ class ConfigController extends Controller
     {
         $request->validate([
             'image' => 'required',
-            'image.*' => 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048'
+            'image.*' => 'image|mimes:jpeg,png,jpg,gif,svg,webp'
         ]);
 
         if ($request->hasFile('image')) {
@@ -146,7 +146,7 @@ class ConfigController extends Controller
         // Validate the request data
         $request->validate([
             'name' => 'required|string|max:255',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
         ]);
 
         // Handle file upload
